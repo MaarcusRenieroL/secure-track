@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@tanstack/react-query": "^4.35.3",
@@ -15,8 +18,9 @@
     "@trpc/next": "^10.43.6",
     "@trpc/react-query": "^10.43.6",
     "@trpc/server": "^10.43.6",
-    "react": "^18",
     "next": "^14",
+    "prisma": "^5.8.1",
+    "react": "^18",
     "react-dom": "^18",
     "superjson": "^2.2.1",
     "zod": "^3.22.4"
