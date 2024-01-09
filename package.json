@@ -41,6 +41,7 @@
     "react-day-picker": "^8.10.0",
     "react-dom": "^18",
     "react-hook-form": "^7.49.3",
+    "recharts": "^2.10.4",
     "shadcn-ui": "^0.8.0",
     "superjson": "^2.2.1",
     "tailwind-merge": "^2.2.0",
