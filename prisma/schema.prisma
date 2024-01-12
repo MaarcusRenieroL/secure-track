@@ -93,3 +93,15 @@ model Route {
   duration       Int
   driverId       String
 }
+
+model Stop {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  stopName       String @unique
+  lat            Float
+  lng            Float
+  fleetNumber    String
+  routeNumber    String
+  pickupTime     String
+  dropTime       String
+  passengerCount Int
+}

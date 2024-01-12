@@ -1,6 +1,6 @@
 "use client";
 
-import type { Organization, Fleet, Route, User } from "@prisma/client";
+import type { Organization, Fleet, Route, User, Stop } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
@@ -748,6 +748,148 @@ export const userColumns: ColumnDef<User>[] = [
       </div>
     ),
     accessorKey: "isOnboarded",
+  },
+  {
+    id: "actions",
+    header: () => (
+      <div className="flex min-w-max items-center justify-center">Actions</div>
+    ),
+    cell: () => (
+      <div className="min-w-max space-x-2">
+        <Button variant="outline" size="icon">
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon">
+          <Trash className="h-4 w-4" />
+        </Button>
+      </div>
+    ),
+  },
+];
+
+export const stopsColumns: ColumnDef<Stop>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "uniqueId",
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+    ),
+    accessorKey: "id",
+    enableHiding: true,
+  },
+  {
+    id: "stopName",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Stop Name" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("stopName")}</div>
+    ),
+    accessorKey: "stopName",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "lat",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Latitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lat")}</div>,
+    accessorKey: "lat",
+  },
+  {
+    id: "lng",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Longitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lng")}</div>,
+    accessorKey: "lng",
+  },
+  {
+    id: "fleetNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Fleet Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
+    ),
+    accessorKey: "fleetNumber",
+  },
+  {
+    id: "routeNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Route Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("routeNumber")}</div>
+    ),
+    accessorKey: "routeNumber",
+  },
+  {
+    id: "pickupTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Pickup Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("pickupTime")}</div>
+    ),
+    accessorKey: "pickupTime",
+  },
+  {
+    id: "dropTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Drop Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("dropTime")}</div>
+    ),
+    accessorKey: "dropTime",
+  },
+  {
+    id: "passengerCount",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Passenger Count" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("passengerCount")}</div>
+    ),
+    accessorKey: "passengerCount",
   },
   {
     id: "actions",
