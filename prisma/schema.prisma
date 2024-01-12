@@ -26,3 +26,29 @@ model User {
   isVerified  Boolean  @default(false)
   isOnboarded Boolean  @default(false)
 }
+
+enum OrganizationType {
+  SCHOOL
+  COLLEGE
+  COMPANY
+}
+
+model Organization {
+  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  orgName             String           @unique
+  orgType             OrganizationType
+  fleetsCount         Int
+  routesCount         Int
+  crewsCount          Int
+  passengersCount     Int
+  adminName           String
+  adminEmail          String
+  adminPhoneNumber    String
+  altAdminPhoneNumber String
+  addressLine1        String
+  addressLine2        String?
+  addressLine3        String?
+  state               String
+  city                String
+  pincode             Int
+}
