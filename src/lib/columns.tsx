@@ -1,6 +1,6 @@
 "use client";
 
-import type { Organization, Fleet, Route } from "@prisma/client";
+import type { Organization, Fleet, Route, User } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
@@ -630,6 +630,124 @@ export const routeColumns: ColumnDef<Route>[] = [
       <div className="min-w-max">{row.getValue("driverId")}</div>
     ),
     accessorKey: "driverId",
+  },
+  {
+    id: "actions",
+    header: () => (
+      <div className="flex min-w-max items-center justify-center">Actions</div>
+    ),
+    cell: () => (
+      <div className="min-w-max space-x-2">
+        <Button variant="outline" size="icon">
+          <Edit className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon">
+          <Trash className="h-4 w-4" />
+        </Button>
+      </div>
+    ),
+  },
+];
+
+export const userType: filterType = [
+  { label: "SUPER_ADMIN", value: "SUPER_ADMIN" },
+  { label: "ADMIN", value: "ADMIN" },
+  { label: "CREW", value: "CREW" },
+  { label: "PASSENGER", value: "PASSENGER" },
+];
+
+export const userColumns: ColumnDef<User>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "uniqueId",
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+    ),
+    accessorKey: "id",
+    enableHiding: true,
+  },
+  {
+    id: "email",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Email ID" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("email")}</div>,
+    accessorKey: "email",
+  },
+  {
+    id: "role",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="User Role" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const type = userType.find((type) => type.value === row.getValue("role"));
+
+      if (!type) {
+        return null;
+      }
+
+      return (
+        <div className="min-w-max">
+          <span>{type.label}</span>
+        </div>
+      );
+    },
+    filterFn: (row, id: string, value: Array<string>) => {
+      return value.includes(row.getValue(id)) as boolean;
+    },
+    accessorKey: "role",
+  },
+  {
+    id: "isVerified",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Is Verified" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {JSON.stringify(row.getValue("isVerified"))}
+      </div>
+    ),
+    accessorKey: "isVerified",
+  },
+  {
+    id: "isOnboarded",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Is Onboarded" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {JSON.stringify(row.getValue("isOnboarded"))}
+      </div>
+    ),
+    accessorKey: "isOnboarded",
   },
   {
     id: "actions",

@@ -1,7 +1,7 @@
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { fleetType, fleetColumns } from "@/lib/columns";
 
-export default function SuperAdminOrganizationsPage() {
+export default function SuperAdminFleetsPage() {
   return (
     <>
       <div className="flex items-center justify-center">
