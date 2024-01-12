@@ -52,3 +52,32 @@ model Organization {
   city                String
   pincode             Int
 }
+
+enum FleetType {
+  BUS
+  MINI_BUS
+  VAN
+}
+
+enum FleetStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  IDLE
+}
+
+model Fleet {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  fleetNumber String      @unique
+  regNumber   String
+  make        String
+  model       String
+  year        Int
+  type        FleetType
+  color       String
+  status      FleetStatus
+  fcExpDate   DateTime
+  capacity    Int
+  ac          Boolean
+}
+
