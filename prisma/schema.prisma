@@ -105,3 +105,14 @@ model Stop {
   dropTime       String
   passengerCount Int
 }
+
+model trackinglogs {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  regNumber   String
+  gpsDeviceId String
+  routeNumber String
+  timeStamp   DateTime
+  latitude    Float
+  longitude   Float
+}
+
