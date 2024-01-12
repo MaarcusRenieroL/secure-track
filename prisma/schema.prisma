@@ -116,3 +116,14 @@ model trackinglogs {
   longitude   Float
 }
 
+model passengerlogs {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  uid           String
+  name          String
+  fleetNumber   String
+  routeNumber   String
+  boardingPoint String
+  dropPoint     String
+  bTimeStamp    DateTime
+  dTimeStamp    DateTime
+}

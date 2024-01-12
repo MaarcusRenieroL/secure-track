@@ -1,6 +1,6 @@
 "use client";
 
-import type { Organization, Fleet, Route, User, Stop, trackinglogs } from "@prisma/client";
+import type { Organization, Fleet, Route, User, Stop, trackinglogs, passengerlogs } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
@@ -1014,6 +1014,139 @@ export const trackingLogColumns: ColumnDef<trackinglogs>[] = [
       <div className="min-w-max">{row.getValue("longitude")}</div>
     ),
     accessorKey: "longitude",
+  },
+];
+
+export const passengerLogColumns: ColumnDef<passengerlogs>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "uniqueId",
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+    ),
+    accessorKey: "id",
+    enableHiding: true,
+  },
+  {
+    id: "uid",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="UUID" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("uid")}</div>,
+    accessorKey: "uid",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "name",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Name" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("name")}</div>,
+    accessorKey: "name",
+  },
+  {
+    id: "fleetNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Fleet Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
+    ),
+    accessorKey: "fleetNumber",
+  },
+  {
+    id: "routeNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Route Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("routeNumber")}</div>
+    ),
+    accessorKey: "routeNumber",
+  },
+  {
+    id: "boardingPoint",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Boarding Point" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("boardingPoint")}</div>
+    ),
+    accessorKey: "boardingPoint",
+  },
+  {
+    id: "dropPoint",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Drop Point" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("dropPoint")}</div>
+    ),
+    accessorKey: "dropPoint",
+  },
+  {
+    id: "bTimeStamp",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader
+          column={column}
+          title="Boarding Point Time Stamp"
+        />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {new Date(row.getValue("bTimeStamp")).toLocaleTimeString()}
+      </div>
+    ),
+    accessorKey: "bTimeStamp",
+  },
+  {
+    id: "dTimeStamp",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Drop Point Time Stamp" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {new Date(row.getValue("dTimeStamp")).toLocaleTimeString()}
+      </div>
+    ),
+    accessorKey: "dTimeStamp",
   },
 ];
 
