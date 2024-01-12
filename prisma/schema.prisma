@@ -81,3 +81,15 @@ model Fleet {
   ac          Boolean
 }
 
+model Route {
+  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  routeName    String @unique
+  stops          String
+  passengerCount Int
+  startTime      String
+  endTime        String
+  startPoint     String
+  distance       Int
+  duration       Int
+  driverId       String
+}
