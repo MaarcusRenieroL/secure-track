@@ -1470,3 +1470,122 @@ export const passengerRouteColumns: ColumnDef<Route>[] = [
   },
 ];
 
+export const passengerStopColumns: ColumnDef<Stop>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "stopName",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Stop Name" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("stopName")}</div>
+    ),
+    accessorKey: "stopName",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "lat",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Latitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lat")}</div>,
+    accessorKey: "lat",
+  },
+  {
+    id: "lng",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Longitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lng")}</div>,
+    accessorKey: "lng",
+  },
+  {
+    id: "fleetNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Fleet Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
+    ),
+    accessorKey: "fleetNumber",
+  },
+  {
+    id: "routeNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Route Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("routeNumber")}</div>
+    ),
+    accessorKey: "routeNumber",
+  },
+  {
+    id: "pickupTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Pickup Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("pickupTime")}</div>
+    ),
+    accessorKey: "pickupTime",
+  },
+  {
+    id: "dropTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Drop Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("dropTime")}</div>
+    ),
+    accessorKey: "dropTime",
+  },
+  {
+    id: "passengerCount",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Passenger Count" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("passengerCount")}</div>
+    ),
+    accessorKey: "passengerCount",
+  },
+];
+
+
