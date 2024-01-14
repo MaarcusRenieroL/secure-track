@@ -1267,3 +1267,102 @@ export const crewStopColumns: ColumnDef<Stop>[] = [
     accessorKey: "passengerCount",
   },
 ];
+
+export const passengerFleetColumns: ColumnDef<Fleet>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "fleetNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Fleet Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
+    ),
+    accessorKey: "fleetNumber",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "model",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Model" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("model")}</div>,
+    accessorKey: "model",
+  },
+  {
+    id: "type",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Bus Type" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("type")}</div>,
+    accessorKey: "type",
+  },
+  {
+    id: "color",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Color" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("color")}</div>,
+    accessorKey: "color",
+  },
+  {
+    id: "fcExpDate",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="FC Expiry Date" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {new Date(row.getValue("fcExpDate")).toDateString()}
+      </div>
+    ),
+    accessorKey: "fcExpDate",
+  },
+  {
+    id: "capacity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Capacity" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("capacity")}</div>
+    ),
+    accessorKey: "capacity",
+  },
+  {
+    id: "ac",
+    header: ({}) => <div>AC</div>,
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("ac")}</div>,
+    accessorKey: "ac",
+  },
+];
+
