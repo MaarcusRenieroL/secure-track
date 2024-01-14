@@ -1366,3 +1366,107 @@ export const passengerFleetColumns: ColumnDef<Fleet>[] = [
   },
 ];
 
+export const passengerRouteColumns: ColumnDef<Route>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "routeNumber",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Route Number" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("routeNumber")}</div>
+    ),
+    accessorKey: "routeNumber",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "stops",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Stops" />
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("stops")}</div>,
+    accessorKey: "stops",
+  },
+  {
+    id: "startTime",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Start Time" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("startTime")}</div>
+    ),
+    accessorKey: "startTime",
+  },
+  {
+    id: "endTime",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="End Time" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("endTime")}</div>
+    ),
+    accessorKey: "endTime",
+  },
+  {
+    id: "startPoint",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Start Point" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("startPoint")}</div>
+    ),
+    accessorKey: "startPoint",
+  },
+  {
+    id: "distance",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Distance" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("distance")}</div>
+    ),
+    accessorKey: "distance",
+  },
+  {
+    id: "duration",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Duration" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("duration")}</div>
+    ),
+    accessorKey: "duration",
+  },
+  {
+    id: "driverId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Driver Id" />
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("driverId")}</div>
+    ),
+    accessorKey: "driverId",
+  },
+];
+
