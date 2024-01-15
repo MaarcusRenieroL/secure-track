@@ -1,39 +1,52 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-export default function RegisterPage() {
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import type * as z from "zod";
 
-  const form = useForm({
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { registerSchema } from "@/lib/zod-schema";
+import { client } from "@/app/_trpc/client";
+import { toast } from "@/components/ui/use-toast";
+
+export default function LoginPage() {
+  const router = useRouter();
+  const { mutateAsync, isLoading } = client.user.addUser.useMutation({
+    onSuccess: () => {
+      toast({
+        title: "Account created",
+        description: "You can now login",
+        duration: 5000,
+      });
+      router.push("/login");
+    },
+    onError: (err) => {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        duration: 5000,
+      });
+      console.log(err);
+    },
+  });
+  const form = useForm<z.infer<typeof registerSchema>>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
     },
   });
 
-  const handleLogin = async (data: any) => {
-    console.log(data);
+  const handleLogin = async (data: z.infer<typeof registerSchema>) => {
+    await mutateAsync(data);
   };
 
   return (
@@ -43,7 +56,7 @@ export default function RegisterPage() {
           <CardHeader>
             <CardTitle>Create your account</CardTitle>
             <CardDescription>
-              Enter your email and password to create a new account
+              Enter your email and password to register
             </CardDescription>
           </CardHeader>
           <form onSubmit={form.handleSubmit(handleLogin)}>
@@ -97,7 +110,7 @@ export default function RegisterPage() {
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Re-Enter your password here"
+                        placeholder="Re-enter your password here"
                         {...field}
                       />
                     </FormControl>
@@ -114,8 +127,8 @@ export default function RegisterPage() {
                 Already have an account?{" "}
                 <span>
                   <Link href={"/auth/login"}>
-                    <Button variant={"link"}>
-                      Login here 👇🏻
+                    <Button variant={"link"} disabled={isLoading}>
+                      {isLoading ? "Registering user" : "Login here 👇🏻"}
                     </Button>
                   </Link>
                 </span>

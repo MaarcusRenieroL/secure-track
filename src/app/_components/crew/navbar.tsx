@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 
 const CrewNavbar: React.FC = () => {
@@ -46,7 +47,7 @@ const CrewNavbar: React.FC = () => {
           </div>
           <SheetFooter className="mt-10">
             <SheetClose asChild>
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full" onClick={() => signOut()}>
                 Logout
               </Button>
             </SheetClose>
