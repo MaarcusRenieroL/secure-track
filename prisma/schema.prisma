@@ -56,6 +56,7 @@ model Organization {
   pincode             Int
 
   users User[]
+  fleets Fleet[]
 }
 
 enum FleetType {
@@ -84,6 +85,9 @@ model Fleet {
   fcExpDate   DateTime
   capacity    Int
   ac          Boolean
+
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 }
 
 model Route {

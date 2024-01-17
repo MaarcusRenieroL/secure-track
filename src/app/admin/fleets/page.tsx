@@ -1,15 +1,13 @@
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { fleetColumns, fleetType } from "@/lib/columns";
-import { Button } from "@/components/ui/button";
+import AddFleetModal from "@/app/_components/admin/add/fleet-modal";
 
 export default function AdminFleetsPage() {
   return (
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Fleet Management Page </h1>
-        <Button>
-          Add New Fleet
-          </Button>
+        <AddFleetModal />
       </div>
       <div className="mt-10">
         <DataTable
