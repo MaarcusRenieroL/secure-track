@@ -25,6 +25,9 @@ model User {
   role        UserRole @default(PASSENGER)
   isVerified  Boolean  @default(false)
   isOnboarded Boolean  @default(false)
+
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 }
 
 enum OrganizationType {
@@ -34,7 +37,7 @@ enum OrganizationType {
 }
 
 model Organization {
-  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  organizationId      String           @id @default(auto()) @map("_id") @db.ObjectId
   orgName             String           @unique
   orgType             OrganizationType
   fleetsCount         Int
@@ -51,6 +54,8 @@ model Organization {
   state               String
   city                String
   pincode             Int
+
+  users User[]
 }
 
 enum FleetType {
@@ -83,7 +88,7 @@ model Fleet {
 
 model Route {
   id             String @id @default(auto()) @map("_id") @db.ObjectId
-  routeName    String @unique
+  routeName      String @unique
   stops          String
   passengerCount Int
   startTime      String
