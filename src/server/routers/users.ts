@@ -1,5 +1,5 @@
 import { registerSchema } from "@/lib/zod-schema";
-import { adminProcedure, publicProcedure, router } from "@/server/trpc";
+import { adminProcedure, combinedProcedure, publicProcedure, router } from "@/server/trpc";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -7,6 +7,33 @@ import { userSchema } from "@/lib/zod-schema";
 import { getUserByEmail, getUserById } from "@/lib/helpers";
 
 export const userRouter = router({
+  getUsers: combinedProcedure.query(async ({ ctx }) => {
+    try {
+      const { userId } = ctx;
+      const user = await db.user.findUnique({
+        where: {
+          userId: userId,
+        },
+      });
+      if (user?.role === "SUPER_ADMIN") {
+        return await db.user.findMany();
+      } else {
+        const user = await db.user.findUnique({
+          where: {
+            userId: userId,
+          },
+        });
+        return await db.user.findMany({
+          where: {
+            organizationId: user?.organizationId,
+          },
+        });
+      } } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  }),
   addUser: publicProcedure.input(registerSchema).mutation(async ({ input }) => {
     try {
       const { email, password, confirmPassword } = input;
