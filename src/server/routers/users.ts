@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
 import { userSchema } from "@/lib/zod-schema";
 import { getUserByEmail, getUserById } from "@/lib/helpers";
+import * as z from "zod";
 
 export const userRouter = router({
   getUsers: combinedProcedure.query(async ({ ctx }) => {
@@ -103,6 +104,29 @@ export const userRouter = router({
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Error creating user",
+      });
+    }
+  }),
+  deleteUser: adminProcedure.input(z.string()).mutation(async ({ input }) => {
+    try {
+      const deleteUser = await db.user.delete({
+        where: {
+          userId: input,
+        },
+      });
+      console.log(deleteUser.userId);
+      
+      return {
+        success: true,
+        status: 200,
+        message: "User Deleted Successfully",
+        data: deleteUser.userId,
+      };
+    } catch (error) {
+      console.log(error);
+      
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
       });
     }
   }),

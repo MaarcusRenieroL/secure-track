@@ -6,6 +6,7 @@ import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DeleteUserModal } from "@/app/_components/admin/delete/user-modal";
 
 type filterType = {
   label: string;
@@ -681,9 +682,9 @@ export const userColumns: ColumnDef<User>[] = [
   {
     id: "uniqueId",
     cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+      <div className="min-w-max">{row.getValue("userId")}</div>
     ),
-    accessorKey: "id",
+    accessorKey: "userId",
     enableHiding: true,
   },
   {
@@ -754,14 +755,12 @@ export const userColumns: ColumnDef<User>[] = [
     header: () => (
       <div className="flex min-w-max items-center justify-center">Actions</div>
     ),
-    cell: () => (
+    cell: ({ row }) => (
       <div className="min-w-max space-x-2">
         <Button variant="outline" size="icon">
           <Edit className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon">
-          <Trash className="h-4 w-4" />
-        </Button>
+        <DeleteUserModal id={row.getValue("uniqueId")} />
       </div>
     ),
   },
