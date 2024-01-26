@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-ta
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeleteUserModal } from "@/app/_components/admin/delete/user-modal";
+import EditUserModal from "@/app/_components/admin/edit/user-modal";
 
 type filterType = {
   label: string;
@@ -757,9 +758,7 @@ export const userColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <Button variant="outline" size="icon">
-          <Edit className="h-4 w-4" />
-        </Button>
+        <EditUserModal id={row.getValue("uniqueId")} email={row.getValue("email")} role={row.getValue("role")} />
         <DeleteUserModal id={row.getValue("uniqueId")} />
       </div>
     ),
