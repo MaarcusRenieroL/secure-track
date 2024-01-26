@@ -1,10 +1,35 @@
 import { fleetFormSchema } from "@/lib/zod-schema";
-import { adminProcedure, router } from "@/server/trpc";
+import { adminProcedure, combinedProcedure, router } from "@/server/trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 
 export const fleetRouter = router({
+  getFleets: combinedProcedure.query(async ({ ctx }) => {
+    try {
+      const { userId } = ctx;
+
+      const user = await getUserById(userId);
+
+      if (user?.role === "ADMIN") {
+        const fleets = await db.fleet.findMany({
+          where: {
+            organizationId: user.organizationId,
+          }
+        })
+
+        return fleets;
+      } else {
+        const fleets = await db.fleet.findMany();
+
+        return fleets;
+      }
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }),
   addFleet: adminProcedure.input(fleetFormSchema).mutation(async ({ ctx, input }) => {
     try {
       const { userId } = ctx;
