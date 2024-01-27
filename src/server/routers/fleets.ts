@@ -3,6 +3,7 @@ import { adminProcedure, combinedProcedure, router } from "@/server/trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
+import * as z from "zod";
 
 export const fleetRouter = router({
   getFleets: combinedProcedure.query(async ({ ctx }) => {
@@ -99,4 +100,38 @@ export const fleetRouter = router({
       });
     }
   }),
+  deleteFleet: adminProcedure.input(z.string()).mutation(async ({ input }) => {
+    try {
+      const fleet = await db.fleet.findFirst({
+        where: {
+          id: input,
+        }
+      });
+
+      if (!fleet) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Fleet doesn't exists"
+        })
+      }
+
+      const deletedFleet = await db.fleet.delete({
+        where: {
+          id: input,
+        }
+      })
+
+      return {
+        success: true,
+        status: 201,
+        message: "Fleet updated Successfully",
+        data: deletedFleet.fleetNumber,
+      };
+
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  })
 })
