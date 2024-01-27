@@ -1,6 +1,6 @@
 "use client";
 
-import type { Organization, Fleet, Route, User, Stop, trackinglogs, passengerlogs } from "@prisma/client";
+import type { Organization, Fleet, Route, User, Stop, trackinglogs, passengerlogs, FleetType, FleetStatus } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DeleteUserModal } from "@/app/_components/admin/delete/user-modal";
 import EditUserModal from "@/app/_components/admin/edit/user-modal";
+import { EditFleetModal } from "@/app/_components/admin/edit/fleet-modal";
 
 type filterType = {
   label: string;
@@ -482,11 +483,9 @@ export const fleetColumns: ColumnDef<Fleet>[] = [
     header: () => (
       <div className="flex min-w-max items-center justify-center">Actions</div>
     ),
-    cell: () => (
+    cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <Button variant="outline" size="icon">
-          <Edit className="h-4 w-4" />
-        </Button>
+        <EditFleetModal fleetNumber={row.getValue("fleetNumber")} regNumber={row.getValue("regNumber")} make={row.getValue("make")} model={row.getValue("model")} year={row.getValue("year")} type={row.getValue("type") as FleetType} color={row.getValue("color")} status={row.getValue("status") as FleetStatus} capacity={row.getValue("capacity")} ac={row.getValue("ac")} fcExpDate={new Date(row.getValue("fcExpDate"))} />
         <Button variant="outline" size="icon">
           <Trash className="h-4 w-4" />
         </Button>

@@ -1,4 +1,4 @@
-import { fleetFormSchema } from "@/lib/zod-schema";
+import { fleetFormSchema, updateFleetFormSchema } from "@/lib/zod-schema";
 import { adminProcedure, combinedProcedure, router } from "@/server/trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
@@ -27,7 +27,7 @@ export const fleetRouter = router({
 
     } catch (error) {
       console.log(error);
-      
+
     }
   }),
   addFleet: adminProcedure.input(fleetFormSchema).mutation(async ({ ctx, input }) => {
@@ -56,6 +56,41 @@ export const fleetRouter = router({
         throw new TRPCError({
           code: "CONFLICT",
           message: "Fleet already exists"
+        })
+      }
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  }),
+  updateFleet: adminProcedure.input(updateFleetFormSchema).mutation(async ({ input }) => {
+    try {
+      const { fleetNumber, fcExpDate } = input;
+
+
+      const existingFleet = await db.fleet.findFirst({
+        where: {
+          fleetNumber: fleetNumber,
+        }
+      })
+      if (existingFleet) {
+        const updateFleet = await db.fleet.update({
+          where: {
+            fleetNumber: fleetNumber
+          },
+          data: { fcExpDate: fcExpDate },
+        });
+        return {
+          success: true,
+          status: 201,
+          message: "Fleet updated Successfully",
+          data: updateFleet.fleetNumber,
+        };
+      } else {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Fleet doesn't exists"
         })
       }
     } catch (error) {
