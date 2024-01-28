@@ -3,6 +3,7 @@ import { adminProcedure, combinedProcedure, router } from "../trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
+import * as z from "zod";
 
 export const routeRouter = router({
   getRoutes: combinedProcedure.query(async ({ ctx }) => {
@@ -103,5 +104,41 @@ export const routeRouter = router({
     }
   }
 
-  )
+  ),
+  deleteRoute: adminProcedure.input(z.string()).mutation(async ({ input }) => {
+    try {
+      const existingRoute = await db.route.findFirst({
+        where: {
+          routeId: input,
+        }
+      });
+
+      if (!existingRoute) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Route not found",
+        });
+      }
+
+      const deletedRoute = await db.route.delete({
+        where: {
+          routeId: input,
+        }
+      });
+
+      return {
+
+        success: true,
+        status: 201,
+        message: "Fleet updated Successfully",
+        data: deletedRoute.routeId,
+      }
+    } catch (error) {
+     console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR"
+      })
+      
+    }
+  })
 })
