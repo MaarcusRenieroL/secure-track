@@ -1,14 +1,49 @@
 import { routeSchema } from "@/lib/zod-schema";
-import { adminProcedure, router } from "../trpc";
+import { adminProcedure, combinedProcedure, router } from "../trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 
 export const routeRouter = router({
+  getRoutes: combinedProcedure.query(async ({ ctx }) => {
+    try {
+      const { userId } = ctx;
+
+      const user = await getUserById(userId);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "User doesn't exist",
+        });
+      }
+
+      if (user.role === "SUPER_ADMIN") {
+        const routes = await db.route.findMany();
+
+        return routes;
+      } else {
+        const routes = await db.route.findMany({
+          where: {
+            organizationId: user.organizationId,
+          }
+        });
+
+        return routes;
+      }
+
+    } catch (error) {
+
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+
+    }
+  }),
   addRoute: adminProcedure.input(routeSchema).mutation(async ({ ctx, input }) => {
     try {
       const { userId } = ctx;
-      const { routeName , stops, passengerCount, startTime, endTime, startPoint, distance, duration, driverName, fleetNumber } = input;
+      const { routeName, stops, passengerCount, startTime, endTime, startPoint, distance, duration, driverName, fleetNumber } = input;
 
       const adminUser = await getUserById(userId);
 
@@ -68,4 +103,5 @@ export const routeRouter = router({
     }
   }
 
-  )})
+  )
+})

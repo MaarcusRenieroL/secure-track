@@ -620,18 +620,6 @@ export const routeColumns: ColumnDef<Route>[] = [
     accessorKey: "duration",
   },
   {
-    id: "driverId",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Driver ID" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("driverId")}</div>
-    ),
-    accessorKey: "driverId",
-  },
-  {
     id: "actions",
     header: () => (
       <div className="flex min-w-max items-center justify-center">Actions</div>

@@ -1,12 +1,13 @@
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { routeColumns } from "@/lib/columns";
-import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import AddRouteModal from "@/app/_components/admin/add/route-modal";
+import { server } from "@/app/_trpc/server";
 
 export default async function AdminRoutesPage() {
   const fleets = await db.fleet.findMany();
   const users = await db.user.findMany();
+  const routes = await server.route.getRoutes();
   return (
     <>
       <div className="flex items-center justify-between">
@@ -16,7 +17,7 @@ export default async function AdminRoutesPage() {
       <div className="mt-10">
         <DataTable
           columns={routeColumns}
-          data={[]}
+          data={routes}
           placeholder="Search Route Number"
           searchColumnName="routeName"
         />
