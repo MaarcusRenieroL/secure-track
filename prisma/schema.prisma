@@ -20,6 +20,7 @@ enum UserRole {
 
 model User {
   userId      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
   email       String   @unique
   password    String
   role        UserRole @default(PASSENGER)
@@ -28,6 +29,8 @@ model User {
 
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
+
+  route Route?
 }
 
 enum OrganizationType {
@@ -55,8 +58,9 @@ model Organization {
   city                String
   pincode             Int
 
-  users User[]
+  users  User[]
   fleets Fleet[]
+  routes Route[]
 }
 
 enum FleetType {
@@ -73,7 +77,7 @@ enum FleetStatus {
 }
 
 model Fleet {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  fleetId     String      @id @default(auto()) @map("_id") @db.ObjectId
   fleetNumber String      @unique
   regNumber   String
   make        String
@@ -88,10 +92,12 @@ model Fleet {
 
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
+
+  route Route?
 }
 
 model Route {
-  id             String @id @default(auto()) @map("_id") @db.ObjectId
+  routeId        String @id @default(auto()) @map("_id") @db.ObjectId
   routeName      String @unique
   stops          String
   passengerCount Int
@@ -100,7 +106,15 @@ model Route {
   startPoint     String
   distance       Int
   duration       Int
-  driverId       String
+
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
+
+  driverId User?  @relation(fields: [userId], references: [userId])
+  userId String @unique @db.ObjectId
+
+  route   Fleet? @relation(fields: [fleetId], references: [fleetId])
+  fleetId String @unique @db.ObjectId
 }
 
 model Stop {

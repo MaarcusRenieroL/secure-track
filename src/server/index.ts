@@ -4,10 +4,12 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { router } from "@/server/trpc";
 import { userRouter } from "@/server/routers/users";
 import { fleetRouter } from "./routers/fleets";
+import { routeRouter } from "./routers/routes";
 
 export const appRouter = router({
 	user: userRouter,
-  fleet: fleetRouter
+  fleet: fleetRouter,
+  route: routeRouter,
 });
 
 export type AppRouter = typeof appRouter;

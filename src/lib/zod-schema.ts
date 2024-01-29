@@ -177,3 +177,53 @@ export const updateFleetFormSchema = z.object({
   ),
 });
 
+export const routeSchema = z.object({
+  routeName: z.string({
+    required_error: "Route Number is required",
+  }).min(2, {
+    message: "Route Number must be at least 2 characters long",
+  }),
+  stops: z.string({
+    required_error: "Stops are required",
+  }),
+  passengerCount: z.preprocess(
+    (args) => (args === "" ? undefined : args),
+    z.coerce.number().min(20, {
+      message: "Passenger Count must be at least 2",
+    }).max(60, {
+      message: "Passenger Count cannot be greater than 15",
+    }),
+  ),
+  startTime: z.string({
+    required_error: "Start Time is required",
+  }),
+  endTime: z.string({
+    required_error: "End Time is required",
+  }),
+  startPoint: z.string({
+    required_error: "Start Point is required",
+  }),
+  distance: z.preprocess(
+    (args) => (args === "" ? undefined : args),
+    z.coerce.number().min(15, {
+      message: "Distance must be at least 15 kms",
+    }).max(180, {
+      message: "Distance cannot be greater than 50 kms",
+    }),
+  ),
+  duration: z.preprocess(
+    (args) => (args === "" ? undefined : args),
+    z.coerce.number().min(30, {
+      message: "Duration must be at least 30",
+    }).max(180, {
+      message: "Duration cannot be greater than 180",
+    }),
+  ),
+  driverName: z.string({
+    required_error: "Driver name is required"
+  }),
+  fleetNumber: z.string({
+    required_error: "Fleet Number is required"
+  })
+});
+

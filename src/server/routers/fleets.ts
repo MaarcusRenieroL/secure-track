@@ -104,7 +104,7 @@ export const fleetRouter = router({
     try {
       const fleet = await db.fleet.findFirst({
         where: {
-          id: input,
+          fleetId: input,
         }
       });
 
@@ -117,7 +117,7 @@ export const fleetRouter = router({
 
       const deletedFleet = await db.fleet.delete({
         where: {
-          id: input,
+          fleetId: input,
         }
       })
 
