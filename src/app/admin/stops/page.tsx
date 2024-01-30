@@ -1,19 +1,19 @@
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { stopsColumns } from "@/lib/columns";
-import { Button } from "@/components/ui/button";
 import { server } from "@/app/_trpc/server";
+import AddStopModal from "@/app/_components/admin/add/stop-modal";
 
 export default async function AdminStopsPage() {
 
   const stops = await server.stop.getStops();
+  const fleets = await server.fleet.getFleets() || [];
+  const routes = await server.route.getRoutes();
 
   return (
     <>
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Stops Management Page </h1>
-        <Button>
-          Add New Stop
-        </Button>
+        <AddStopModal fleets={fleets} routes={routes} />
       </div>
       <div className="mt-10">
         <DataTable

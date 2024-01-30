@@ -814,30 +814,6 @@ export const stopsColumns: ColumnDef<Stop>[] = [
     accessorKey: "lng",
   },
   {
-    id: "fleetNumber",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Fleet Number" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
-    ),
-    accessorKey: "fleetNumber",
-  },
-  {
-    id: "routeNumber",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Route Number" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("routeNumber")}</div>
-    ),
-    accessorKey: "routeNumber",
-  },
-  {
     id: "pickupTime",
     header: ({ column }) => (
       <div>

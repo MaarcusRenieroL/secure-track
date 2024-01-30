@@ -270,3 +270,42 @@ export const updateRouteSchema = z.object({
     }),
   ),
 })
+
+export const stopSchema = z.object({
+  stopName: z
+    .string({
+      required_error: "Stop Name is required",
+    })
+    .min(2, {
+      message: "Stop Name must be at least 2 characters long",
+    }),
+  lat: z.string({
+    required_error: "Latitude is required",
+  }),
+  lng: z.string({
+    required_error: "Longitude is required",
+  }),
+  fleetNumber: z.string({
+    required_error: "Fleet Number is required",
+  }),
+  routeName: z.string({
+    required_error: "Route Number is required",
+  }),
+  pickupTime: z.string({
+    required_error: "Pickup Time is required",
+  }),
+  dropTime: z.string({
+    required_error: "Drop Time is required",
+  }),
+  passengerCount: z.preprocess(
+    (args) => (args === "" ? undefined : args),
+    z.coerce
+      .number()
+      .min(2, {
+        message: "Passenger Count must be at least 2",
+      })
+      .max(15, {
+        message: "Passenger Count cannot be greater than 15",
+      }),
+  ),
+});
