@@ -66,6 +66,7 @@ model Organization {
   routes Route[]
   stops Stop[]
   trackinglogs trackinglogs[]
+  passengerlogs passengerlogs[]
 }
 
 enum FleetType {
@@ -169,4 +170,7 @@ model passengerlogs {
   dropPoint     String
   bTimeStamp    DateTime
   dTimeStamp    DateTime
+
+  organization Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String? @db.ObjectId
 }

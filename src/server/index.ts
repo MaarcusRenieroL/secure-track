@@ -7,6 +7,7 @@ import { fleetRouter } from "./routers/fleets";
 import { routeRouter } from "./routers/routes";
 import { stopRouter } from "./routers/stops";
 import { trackingLogRouter } from "./routers/tracking-logs";
+import { passengerLogRouter } from "./routers/passenger-logs";
 
 export const appRouter = router({
 	user: userRouter,
@@ -14,6 +15,7 @@ export const appRouter = router({
   route: routeRouter,
   stop: stopRouter,
   trackingLog: trackingLogRouter,
+  passengerLog: passengerLogRouter,
 });
 
 export type AppRouter = typeof appRouter;
