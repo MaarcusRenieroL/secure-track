@@ -2,7 +2,7 @@ import { getUserById } from "@/lib/helpers";
 import { adminProcedure, privateProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/lib/db";
-import { stopSchema } from "@/lib/zod-schema";
+import { stopSchema, updateStopSchema } from "@/lib/zod-schema";
 import * as z from "zod";
 
 export const stopRouter = router({
@@ -97,6 +97,71 @@ export const stopRouter = router({
       console.log(error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  }),
+  updateStop: adminProcedure.input(updateStopSchema).mutation(async ({ input }) => {
+    try {
+      const { stopName, passengerCount, pickupTime, dropTime } = input;
+
+      const existingStop = await db.stop.findFirst({
+        where: {
+          stopName: stopName,
+        }
+      });
+
+      if (!existingStop) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Stop doesn't exist"
+        });
+      }
+
+      // const fleet = await db.fleet.findFirst({
+      //   where: {
+      //     fleetNumber: fleetNumber,
+      //   }
+      // });
+
+      // if (!fleet) {
+      //   throw new TRPCError({
+      //     code: "NOT_FOUND",
+      //     message: "Fleet doesn't exist"
+      //   });
+      // }
+
+      // const route = await db.route.findFirst({
+      //   where: {
+      //     routeName: routeName,
+      //   }
+      // });
+
+      // if (!route) {
+      //   throw new TRPCError({
+      //     code: "NOT_FOUND",
+      //     message: "Route doesn't exist"
+      //   });
+      // }
+
+      const updatedStop = await db.stop.update({
+        where: {
+          stopName: stopName,
+        }, data: {
+          stopName, passengerCount, pickupTime, dropTime, 
+          // fleetId: fleet.fleetId, routeId: route.routeId,
+        }
+      });
+
+      return {
+        success: true,
+        status: 201,
+        message: "Stop updated successfully",
+        data: updatedStop.stopName
+      }
+    } catch (error) {
+      console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR"
       });
     }
   }),

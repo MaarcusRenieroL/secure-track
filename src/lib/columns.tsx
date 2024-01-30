@@ -13,6 +13,7 @@ import { DeleteFleetModal } from "@/app/_components/admin/delete/fleet-modal";
 import { DeleteRouteModal } from "@/app/_components/admin/delete/route-modal";
 import EditRouteModal from "@/app/_components/admin/edit/route-modal";
 import { DeleteStopModal } from "@/app/_components/admin/delete/stop-modal";
+import EditStopModal from "@/app/_components/admin/edit/stop-modal";
 
 type filterType = {
   label: string;
@@ -857,9 +858,7 @@ export const stopsColumns: ColumnDef<Stop>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <Button variant="outline" size="icon">
-          <Edit className="h-4 w-4" />
-        </Button>
+        <EditStopModal stopName={row.getValue("stopName")} passengerCount={row.getValue("passengerCount")} pickupTime={row.getValue("pickupTime")} dropTime={row.getValue("dropTime")} />
         <DeleteStopModal id={row.getValue("uniqueId")} />
       </div>
     ),
