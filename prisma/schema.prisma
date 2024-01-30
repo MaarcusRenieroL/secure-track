@@ -65,6 +65,7 @@ model Organization {
   fleets Fleet[]
   routes Route[]
   stops Stop[]
+  trackinglogs trackinglogs[]
 }
 
 enum FleetType {
@@ -153,6 +154,9 @@ model trackinglogs {
   timeStamp   DateTime
   latitude    Float
   longitude   Float
+
+  organization Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String? @db.ObjectId
 }
 
 model passengerlogs {
