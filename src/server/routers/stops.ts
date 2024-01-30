@@ -3,6 +3,7 @@ import { adminProcedure, privateProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/lib/db";
 import { stopSchema } from "@/lib/zod-schema";
+import * as z from "zod";
 
 export const stopRouter = router({
   getStops: privateProcedure.query(async ({ ctx }) => {
@@ -93,7 +94,44 @@ export const stopRouter = router({
       };
 
     } catch (error) {
+      console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  }),
+  deleteStop: adminProcedure.input(z.string()).mutation(async ({ input }) => {
+    try {
+      const existingStop = await db.stop.findFirst({
+        where: {
+          stopId: input,
+        }
+      });
 
+      if (!existingStop) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Stop doesn't exist",
+        });
+      }
+
+      const deletedStop = await db.stop.delete({
+        where: {
+          stopId: input,
+        }
+      });
+
+      return {
+        success: true,
+        status: 201,
+        message: "Stop deleted successfully",
+        data: deletedStop.stopName
+      }
+    } catch (error) {
+      console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
     }
   })
 })

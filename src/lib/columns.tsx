@@ -12,6 +12,7 @@ import { EditFleetModal } from "@/app/_components/admin/edit/fleet-modal";
 import { DeleteFleetModal } from "@/app/_components/admin/delete/fleet-modal";
 import { DeleteRouteModal } from "@/app/_components/admin/delete/route-modal";
 import EditRouteModal from "@/app/_components/admin/edit/route-modal";
+import { DeleteStopModal } from "@/app/_components/admin/delete/stop-modal";
 
 type filterType = {
   label: string;
@@ -776,7 +777,7 @@ export const stopsColumns: ColumnDef<Stop>[] = [
     cell: ({ row }) => (
       <div className="min-w-max">{row.getValue("uniqueId")}</div>
     ),
-    accessorKey: "id",
+    accessorKey: "stopId",
     enableHiding: true,
   },
   {
@@ -854,14 +855,12 @@ export const stopsColumns: ColumnDef<Stop>[] = [
     header: () => (
       <div className="flex min-w-max items-center justify-center">Actions</div>
     ),
-    cell: () => (
+    cell: ({ row }) => (
       <div className="min-w-max space-x-2">
         <Button variant="outline" size="icon">
           <Edit className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon">
-          <Trash className="h-4 w-4" />
-        </Button>
+        <DeleteStopModal id={row.getValue("uniqueId")} />
       </div>
     ),
   },
