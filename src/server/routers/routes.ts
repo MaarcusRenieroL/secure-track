@@ -1,4 +1,4 @@
-import { routeSchema } from "@/lib/zod-schema";
+import { routeSchema, updateRouteSchema } from "@/lib/zod-schema";
 import { adminProcedure, combinedProcedure, router } from "../trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
@@ -102,9 +102,43 @@ export const routeRouter = router({
         code: "INTERNAL_SERVER_ERROR",
       });
     }
-  }
+  }),
+  updateRoute: adminProcedure.input(updateRouteSchema).mutation(async ({ input }) => {
+    try {
+      const { routeName, stops, passengerCount, startTime, endTime, startPoint, distance, duration } = input;
 
-  ),
+      const existingRoute = await db.route.findFirst({
+        where: {
+          routeName: routeName,
+        }
+      });
+
+      if (!existingRoute) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Route not found",
+        });
+      }
+
+      const updatedRoute = await db.route.update({
+        where: {
+          routeName: routeName,
+        }, data: {
+          stops, passengerCount, startTime, endTime, startPoint, distance, duration
+        }
+      })
+
+      return {
+        success: true,
+        status: 201,
+        message: "Fleet updated successfully",
+        data: updatedRoute.routeName,
+      };
+
+    } catch (error) {
+
+    }
+  }),
   deleteRoute: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     try {
       const existingRoute = await db.route.findFirst({
@@ -134,11 +168,11 @@ export const routeRouter = router({
         data: deletedRoute.routeId,
       }
     } catch (error) {
-     console.log(error);
+      console.log(error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR"
       })
-      
+
     }
   })
 })

@@ -11,6 +11,7 @@ import EditUserModal from "@/app/_components/admin/edit/user-modal";
 import { EditFleetModal } from "@/app/_components/admin/edit/fleet-modal";
 import { DeleteFleetModal } from "@/app/_components/admin/delete/fleet-modal";
 import { DeleteRouteModal } from "@/app/_components/admin/delete/route-modal";
+import EditRouteModal from "@/app/_components/admin/edit/route-modal";
 
 type filterType = {
   label: string;
@@ -627,9 +628,7 @@ export const routeColumns: ColumnDef<Route>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <Button variant="outline" size="icon">
-          <Edit className="h-4 w-4" />
-        </Button>
+        <EditRouteModal routeName={row.getValue("routeName")} stops={row.getValue("stops")} passengerCount={row.getValue("passengerCount")} startTime={row.getValue("startTime")} endTime={row.getValue("endTime")} startPoint={row.getValue("startPoint")} distance={row.getValue("distance")} duration={row.getValue("duration")} />
         <DeleteRouteModal id={row.getValue("uniqueId")} />
       </div>
     ),
