@@ -1,8 +1,12 @@
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { stopsColumns } from "@/lib/columns";
 import { Button } from "@/components/ui/button";
+import { server } from "@/app/_trpc/server";
 
-export default function AdminStopsPage() {
+export default async function AdminStopsPage() {
+
+  const stops = await server.stop.getStops();
+
   return (
     <>
       <div className="flex items-center justify-between">
@@ -14,7 +18,7 @@ export default function AdminStopsPage() {
       <div className="mt-10">
         <DataTable
           columns={stopsColumns}
-          data={[]}
+          data={stops}
           placeholder="Search Stop Name"
           searchColumnName="stopName"
         />
