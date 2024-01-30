@@ -1,7 +1,10 @@
+import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { trackingLogColumns } from "@/lib/columns";
 
-export default async function SuperAdminStopsPage() {
+export default async function SuperAdminTrackingLogsPage() {
+
+  const trackingLogs = await server.trackingLog.getTrackingLogs();
 
   return (
     <>
@@ -11,7 +14,7 @@ export default async function SuperAdminStopsPage() {
       <div className="mt-10">
         <DataTable
           columns={trackingLogColumns}
-          data={[]}
+          data={trackingLogs}
           placeholder="Search GPS Device Id"
           searchColumnName="gpsDeviceId"
         />
