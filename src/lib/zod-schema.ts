@@ -183,9 +183,7 @@ export const routeSchema = z.object({
   }).min(2, {
     message: "Route Number must be at least 2 characters long",
   }),
-  stops: z.string({
-    required_error: "Stops are required",
-  }),
+  stops: z.array(z.string()),
   passengerCount: z.preprocess(
     (args) => (args === "" ? undefined : args),
     z.coerce.number().min(20, {
@@ -233,9 +231,7 @@ export const updateRouteSchema = z.object({
   }).min(2, {
     message: "Route Number must be at least 2 characters long",
   }),
-  stops: z.string({
-    required_error: "Stops are required",
-  }),
+  stops: z.array(z.string()),
   passengerCount: z.preprocess(
     (args) => (args === "" ? undefined : args),
     z.coerce.number().min(20, {

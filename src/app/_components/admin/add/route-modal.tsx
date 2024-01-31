@@ -1,29 +1,59 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFieldArray } from "react-hook-form";
 import type * as z from "zod";
 import { routeSchema } from "@/lib/zod-schema";
 import { client } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
-import { Fleet, User } from "@prisma/client";
+import { Fleet, Stop, User } from "@prisma/client";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import { CheckIcon } from "lucide-react";
-import { CaretSortIcon  } from "@radix-ui/react-icons";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { StopsField } from "../stops-field";
 
 interface AddRouteModalProps {
   fleets: Fleet[];
   users: User[];
+  stops: Stop[];
 }
 
-export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
+export default function AddRouteModal({
+  fleets,
+  users,
+  stops,
+}: AddRouteModalProps) {
   const { mutateAsync: addNewRoute } = client.route.addRoute.useMutation({
     onSuccess: () => {
       toast({
@@ -42,7 +72,7 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
     resolver: zodResolver(routeSchema),
     defaultValues: {
       routeName: "",
-      stops: "",
+      stops: [],
       passengerCount: 0,
       startTime: "",
       endTime: "",
@@ -53,6 +83,7 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
       fleetNumber: "",
     },
   });
+
   const handleFleetData = async (data: z.infer<typeof routeSchema>) => {
     console.log(data);
     await addNewRoute(data);
@@ -78,31 +109,12 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                 render={({ field }) => (
                   <FormItem className="p-4">
                     <FormLabel>
-                      <Label>Route Number</Label>
+                      <Label>Route Name</Label>
                     </FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter route number"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stops"
-                render={({ field }) => (
-                  <FormItem className="p-4">
-                    <FormLabel>
-                      <Label>Stops</Label>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Enter list of stops"
+                        placeholder="Enter route name"
                         {...field}
                       />
                     </FormControl>
@@ -238,13 +250,12 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                             role="combobox"
                             className={cn(
                               "w-full justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
-                              ? users.find(
-                                (user) => user.name === field.value
-                              )?.name
+                              ? users.find((user) => user.name === field.value)
+                                  ?.name
                               : "Select user"}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
@@ -258,25 +269,27 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                           />
                           <CommandEmpty>No users found.</CommandEmpty>
                           <CommandGroup>
-                            {users.filter((user) => user.role === "CREW").map((user) => (
-                              <CommandItem
-                                value={user.name}
-                                key={user.name}
-                                onSelect={() => {
-                                  form.setValue("driverName", user.name)
-                                }}
-                              >
-                                {user.name}
-                                <CheckIcon
-                                  className={cn(
-                                    "ml-auto h-4 w-4",
-                                    user.name === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
+                            {users
+                              .filter((user) => user.role === "CREW")
+                              .map((user) => (
+                                <CommandItem
+                                  value={user.name}
+                                  key={user.name}
+                                  onSelect={() => {
+                                    form.setValue("driverName", user.name);
+                                  }}
+                                >
+                                  {user.name}
+                                  <CheckIcon
+                                    className={cn(
+                                      "ml-auto h-4 w-4",
+                                      user.name === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0",
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
                           </CommandGroup>
                         </Command>
                       </PopoverContent>
@@ -299,19 +312,19 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                             role="combobox"
                             className={cn(
                               "w-full justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
                               ? fleets.find(
-                                (fleet) => fleet.fleetNumber === field.value
-                              )?.fleetNumber
+                                  (fleet) => fleet.fleetNumber === field.value,
+                                )?.fleetNumber
                               : "Select fleet number"}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
+                      <PopoverContent className="p-0">
                         <Command>
                           <CommandInput
                             placeholder="Search fleet number..."
@@ -324,7 +337,10 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                                 value={fleet.fleetNumber}
                                 key={fleet.fleetNumber}
                                 onSelect={() => {
-                                  form.setValue("fleetNumber", fleet.fleetNumber)
+                                  form.setValue(
+                                    "fleetNumber",
+                                    fleet.fleetNumber,
+                                  );
                                 }}
                               >
                                 {fleet.fleetNumber}
@@ -333,7 +349,7 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                                     "ml-auto h-4 w-4",
                                     fleet.fleetNumber === field.value
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                               </CommandItem>
@@ -346,6 +362,7 @@ export default function AddRouteModal({ fleets, users }: AddRouteModalProps) {
                   </FormItem>
                 )}
               />
+              <StopsField stops={stops} />
             </div>
             <DialogFooter>
               <Button variant="outline">Cancel</Button>

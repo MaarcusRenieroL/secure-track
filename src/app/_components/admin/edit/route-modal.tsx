@@ -12,10 +12,12 @@ import { updateRouteSchema } from "@/lib/zod-schema";
 import { client } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
 import { Edit } from "lucide-react";
+import { StopsField } from "../stops-field";
+import { Stop } from "@prisma/client";
 
 interface EditRouteModalProps {
   routeName: string;
-  stops: string;
+  stops: Stop[];
   passengerCount: number;
   startTime: string;
   endTime: string;
@@ -43,7 +45,7 @@ export default function EditRouteModal({ routeName, stops, passengerCount, start
     resolver: zodResolver(updateRouteSchema),
     defaultValues: {
       routeName: routeName,
-      stops: stops,
+      stops: [...stops.map((stop) => stop.stopId)],
       passengerCount: passengerCount,
       startTime: startTime,
       endTime: endTime,
@@ -87,25 +89,6 @@ export default function EditRouteModal({ routeName, stops, passengerCount, start
                         placeholder="Enter route number"
                         {...field}
                         disabled
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="stops"
-                render={({ field }) => (
-                  <FormItem className="p-4">
-                    <FormLabel>
-                      <Label>Stops</Label>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Enter list of stops"
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -226,6 +209,7 @@ export default function EditRouteModal({ routeName, stops, passengerCount, start
                   </FormItem>
                 )}
               />
+              <StopsField stops={stops} />
             </div>
             <DialogFooter>
               <Button variant="outline">Cancel</Button>

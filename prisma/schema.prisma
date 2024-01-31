@@ -32,8 +32,8 @@ model User {
 
   route Route?
 
-  stop   Stop? @relation(fields: [stopId], references: [stopId])
-  stopId String?       @db.ObjectId
+  stop   Stop?   @relation(fields: [stopId], references: [stopId])
+  stopId String? @db.ObjectId
 }
 
 enum OrganizationType {
@@ -61,11 +61,11 @@ model Organization {
   city                String
   pincode             Int
 
-  users  User[]
-  fleets Fleet[]
-  routes Route[]
-  stops Stop[]
-  trackinglogs trackinglogs[]
+  users         User[]
+  fleets        Fleet[]
+  routes        Route[]
+  stops         Stop[]
+  trackinglogs  trackinglogs[]
   passengerlogs passengerlogs[]
 }
 
@@ -101,7 +101,7 @@ model Fleet {
 
   route Route?
 
-  stop Stop?
+  stop Stop[]
 }
 
 model Route {
@@ -117,17 +117,17 @@ model Route {
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
 
-  driverId User?  @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
-  userId String @unique @db.ObjectId
+  driverId User?   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
+  userId   String? @unique @db.ObjectId
 
-  route   Fleet? @relation(fields: [fleetId], references: [fleetId])
-  fleetId String @unique @db.ObjectId
+  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: NoAction, onUpdate: NoAction)
+  fleetId String? @unique @db.ObjectId
 
   stops Stop[]
 }
 
 model Stop {
-  stopId             String @id @default(auto()) @map("_id") @db.ObjectId
+  stopId         String @id @default(auto()) @map("_id") @db.ObjectId
   stopName       String @unique
   lat            Float
   lng            Float
@@ -135,14 +135,14 @@ model Stop {
   dropTime       String
   passengerCount Int
 
-  organization Organization? @relation(fields: [organizationId], references: [organizationId])
-  organizationId String? @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 
-  route Route? @relation(fields: [routeId], references: [routeId], onDelete: NoAction, onUpdate: NoAction)
-  routeId String @db.ObjectId
+  route   Route?  @relation(fields: [routeId], references: [routeId], onDelete: NoAction, onUpdate: NoAction)
+  routeId String? @db.ObjectId
 
-  fleet   Fleet? @relation(fields: [fleetId], references: [fleetId])
-  fleetId String @unique @db.ObjectId
+  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: NoAction, onUpdate: NoAction)
+  fleetId String? @db.ObjectId
 
   users User[]
 }
@@ -156,8 +156,8 @@ model trackinglogs {
   latitude    Float
   longitude   Float
 
-  organization Organization? @relation(fields: [organizationId], references: [organizationId])
-  organizationId String? @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 }
 
 model passengerlogs {
@@ -171,6 +171,6 @@ model passengerlogs {
   bTimeStamp    DateTime
   dTimeStamp    DateTime
 
-  organization Organization? @relation(fields: [organizationId], references: [organizationId])
-  organizationId String? @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 }

@@ -14,6 +14,7 @@ import { DeleteRouteModal } from "@/app/_components/admin/delete/route-modal";
 import EditRouteModal from "@/app/_components/admin/edit/route-modal";
 import { DeleteStopModal } from "@/app/_components/admin/delete/stop-modal";
 import EditStopModal from "@/app/_components/admin/edit/stop-modal";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 type filterType = {
   label: string;
@@ -497,145 +498,160 @@ export const fleetColumns: ColumnDef<Fleet>[] = [
   },
 ];
 
-export const routeColumns: ColumnDef<Route>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    id: "uniqueId",
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("uniqueId")}</div>
-    ),
-    accessorKey: "routeId",
-    enableHiding: true,
-  },
-  {
-    id: "routeName",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Route Name" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("routeName")}</div>
-    ),
-    accessorKey: "routeName",
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    id: "stops",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Stops" />
-      </div>
-    ),
-    cell: ({ row }) => <div className="min-w-max">{row.getValue("stops")}</div>,
-    accessorKey: "stops",
-  },
-  {
-    id: "passengerCount",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Passenger Count" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("passengerCount")}</div>
-    ),
-    accessorKey: "passengerCount",
-  },
-  {
-    id: "startTime",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Start Time" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("startTime")}</div>
-    ),
-    accessorKey: "startTime",
-  },
-  {
-    id: "endTime",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="End Time" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("endTime")}</div>
-    ),
-    accessorKey: "endTime",
-  },
-  {
-    id: "startPoint",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Start Point" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("startPoint")}</div>
-    ),
-    accessorKey: "startPoint",
-  },
-  {
-    id: "distance",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Distance" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("distance")}</div>
-    ),
-    accessorKey: "distance",
-  },
-  {
-    id: "duration",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Duration" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("duration")}</div>
-    ),
-    accessorKey: "duration",
-  },
-  {
-    id: "actions",
-    header: () => (
-      <div className="flex min-w-max items-center justify-center">Actions</div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max space-x-2">
-        <EditRouteModal routeName={row.getValue("routeName")} stops={row.getValue("stops")} passengerCount={row.getValue("passengerCount")} startTime={row.getValue("startTime")} endTime={row.getValue("endTime")} startPoint={row.getValue("startPoint")} distance={row.getValue("distance")} duration={row.getValue("duration")} />
-        <DeleteRouteModal id={row.getValue("uniqueId")} />
-      </div>
-    ),
-  },
-];
+export const routeColumns: ColumnDef<Route & {
+  stops: Stop[]
+}>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="translate-y-[2px]"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="translate-y-[2px]"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      id: "uniqueId",
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("uniqueId")}</div>
+      ),
+      accessorKey: "routeId",
+      enableHiding: true,
+    },
+    {
+      id: "routeName",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Route Name" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("routeName")}</div>
+      ),
+      accessorKey: "routeName",
+      enableSorting: true,
+      enableHiding: true,
+    },
+    {
+      id: "stops",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Stops" />
+        </div>
+      ),
+      cell: ({ row }) => <div className="min-w-max">
+        <HoverCard>
+          <HoverCardTrigger className="cursor-default">{row.original.stops?.length} stops</HoverCardTrigger>
+          <HoverCardContent>
+            {row.original.stops.map((stop) => (
+              <div className="text-left" key={stop.stopId}>
+                <li>
+                {stop.stopName}
+                </li>
+              </div>
+            ))}
+          </HoverCardContent>
+        </HoverCard>
+      </div>,
+      accessorKey: "stops",
+    },
+    {
+      id: "passengerCount",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Passenger Count" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("passengerCount")}</div>
+      ),
+      accessorKey: "passengerCount",
+    },
+    {
+      id: "startTime",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Start Time" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("startTime")}</div>
+      ),
+      accessorKey: "startTime",
+    },
+    {
+      id: "endTime",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="End Time" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("endTime")}</div>
+      ),
+      accessorKey: "endTime",
+    },
+    {
+      id: "startPoint",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Start Point" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("startPoint")}</div>
+      ),
+      accessorKey: "startPoint",
+    },
+    {
+      id: "distance",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Distance" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("distance")}</div>
+      ),
+      accessorKey: "distance",
+    },
+    {
+      id: "duration",
+      header: ({ column }) => (
+        <div>
+          <DataTableColumnHeader column={column} title="Duration" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max">{row.getValue("duration")}</div>
+      ),
+      accessorKey: "duration",
+    },
+    {
+      id: "actions",
+      header: () => (
+        <div className="flex min-w-max items-center justify-center">Actions</div>
+      ),
+      cell: ({ row }) => (
+        <div className="min-w-max space-x-2">
+          <EditRouteModal routeName={row.getValue("routeName")} stops={row.getValue("stops")} passengerCount={row.getValue("passengerCount")} startTime={row.getValue("startTime")} endTime={row.getValue("endTime")} startPoint={row.getValue("startPoint")} distance={row.getValue("distance")} duration={row.getValue("duration")} />
+          <DeleteRouteModal id={row.getValue("uniqueId")} />
+        </div>
+      ),
+    },
+  ];
 
 export const userType: filterType = [
   { label: "SUPER_ADMIN", value: "SUPER_ADMIN" },
@@ -1316,7 +1332,7 @@ export const passengerFleetColumns: ColumnDef<Fleet>[] = [
   },
   {
     id: "ac",
-    header: ({}) => <div>AC</div>,
+    header: ({ }) => <div>AC</div>,
     cell: ({ row }) => <div className="min-w-max">{row.getValue("ac")}</div>,
     accessorKey: "ac",
   },

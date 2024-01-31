@@ -20,13 +20,19 @@ export const routeRouter = router({
       }
 
       if (user.role === "SUPER_ADMIN") {
-        const routes = await db.route.findMany();
+        const routes = await db.route.findMany({
+          include: {
+            stops: true
+          }
+        });
 
         return routes;
       } else {
         const routes = await db.route.findMany({
           where: {
             organizationId: user.organizationId,
+          }, include: {
+            stops: true
           }
         });
 
@@ -82,7 +88,10 @@ export const routeRouter = router({
       if (!existingRoute) {
         const addNewRoute = await db.route.create({
           data: {
-            routeName, stops, passengerCount, startTime, endTime, startPoint, distance, duration, userId: driverUser.userId, organizationId: adminUser?.userId, fleetId: fleet?.fleetId
+            routeName, passengerCount, startTime, endTime, startPoint, distance, duration, userId: driverUser.userId, organizationId: adminUser?.userId, fleetId: fleet?.fleetId,
+            stops: {
+              connect: stops.map(stop => ({ stopId: stop }))
+            },
           }
         });
         return {
@@ -124,7 +133,10 @@ export const routeRouter = router({
         where: {
           routeName: routeName,
         }, data: {
-          stops, passengerCount, startTime, endTime, startPoint, distance, duration
+          passengerCount, startTime, endTime, startPoint, distance, duration,
+          stops: {
+            connect: stops.map(stop => ({ stopId: stop }))
+          },
         }
       })
 
