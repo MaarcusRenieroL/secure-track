@@ -8,14 +8,16 @@ import { routeRouter } from "./routers/routes";
 import { stopRouter } from "./routers/stops";
 import { trackingLogRouter } from "./routers/tracking-logs";
 import { passengerLogRouter } from "./routers/passenger-logs";
+import { organizationRouter } from "./routers/organizations";
 
 export const appRouter = router({
-	user: userRouter,
+  user: userRouter,
   fleet: fleetRouter,
   route: routeRouter,
   stop: stopRouter,
   trackingLog: trackingLogRouter,
   passengerLog: passengerLogRouter,
+  organization: organizationRouter,
 });
 
 export type AppRouter = typeof appRouter;

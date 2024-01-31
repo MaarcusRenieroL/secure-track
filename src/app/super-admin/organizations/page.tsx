@@ -1,7 +1,10 @@
+import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { orgColumns, orgType } from "@/lib/columns";
 
-export default function SuperAdminOrganizationsPage() {
+export default async function SuperAdminOrganizationsPage() {
+  const organizations = await server.organization.getOrganizations();
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -10,7 +13,7 @@ export default function SuperAdminOrganizationsPage() {
       <div className="mt-10">
         <DataTable
           columns={orgColumns}
-          data={[]}
+          data={organizations}
           placeholder="Search Organization Name"
           searchColumnName="orgName"
           facetedFilterColumn1="orgType"

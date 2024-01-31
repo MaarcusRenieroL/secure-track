@@ -47,6 +47,26 @@ const isAuth = middleware(async (opts) => {
   });
 });
 
+const isSuperAdmin = middleware(async (opts) => {
+  const session = await getServerSession(authOptions); // getting server session
+  if (!session) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  const { user } = session;
+
+  if (!user || !user.id || user.role !== "SUPER_ADMIN") {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+
+  return opts.next({
+    ctx: {
+      userId: user.id,
+      user,
+      db,
+    },
+  });
+});
+
 const isAdmin = middleware(async (opts) => {
   const session = await getServerSession(authOptions); // getting server session
   if (!session) {
@@ -89,5 +109,6 @@ const isCombined = middleware(async (opts) => {
 export const router = t.router;
 export const publicProcedure = t.procedure;
 export const privateProcedure = t.procedure.use(isAuth);
+export const superAdminProcedure = t.procedure.use(isSuperAdmin);
 export const adminProcedure = t.procedure.use(isAdmin);
 export const combinedProcedure = t.procedure.use(isCombined);
