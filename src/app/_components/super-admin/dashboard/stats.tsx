@@ -3,11 +3,16 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { client } from "@/app/_trpc/client";
 
 export default function StatisticsSection() {
-  const organizationsCount = 0;
+  const organizationsCount =
+    client.organization.getOrganizations.useQuery().data?.length;
   const fleetCount = client.fleet.getFleets.useQuery().data?.length;
   const routeCount = client.route.getRoutes.useQuery().data?.length;
-  const passengerCount = client.user.getUsers.useQuery().data?.filter((user) => user.role === "PASSENGER").length;
-  const crewCount = client.user.getUsers.useQuery().data?.filter((user) => user.role === "CREW").length;
+  const passengerCount = client.user.getUsers
+    .useQuery()
+    .data?.filter((user) => user.role === "PASSENGER").length;
+  const crewCount = client.user.getUsers
+    .useQuery()
+    .data?.filter((user) => user.role === "CREW").length;
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
