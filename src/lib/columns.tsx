@@ -1,6 +1,16 @@
 "use client";
 
-import type { Organization, Fleet, Route, User, Stop, trackinglogs, passengerlogs, FleetType, FleetStatus } from "@prisma/client";
+import type {
+  Organization,
+  Fleet,
+  Route,
+  User,
+  Stop,
+  trackinglogs,
+  passengerlogs,
+  FleetType,
+  FleetStatus,
+} from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/tanstack-react-table/data-table-column-header";
@@ -14,7 +24,12 @@ import { DeleteRouteModal } from "@/app/_components/admin/delete/route-modal";
 import EditRouteModal from "@/app/_components/admin/edit/route-modal";
 import { DeleteStopModal } from "@/app/_components/admin/delete/stop-modal";
 import EditStopModal from "@/app/_components/admin/edit/stop-modal";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { DeleteOrganizationModal } from "@/app/_components/admin/delete/organization-modal";
 
 type filterType = {
   label: string;
@@ -54,7 +69,7 @@ export const orgColumns: ColumnDef<Organization>[] = [
     cell: ({ row }) => (
       <div className="min-w-max">{row.getValue("uniqueId")}</div>
     ),
-    accessorKey: "id",
+    accessorKey: "organizationId",
     enableHiding: true,
   },
   {
@@ -270,14 +285,12 @@ export const orgColumns: ColumnDef<Organization>[] = [
     header: () => (
       <div className="flex min-w-max items-center justify-center">Actions</div>
     ),
-    cell: () => (
+    cell: ({ row }) => (
       <div className="min-w-max space-x-2">
         <Button variant="outline" size="icon">
           <Edit className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="icon">
-          <Trash className="h-4 w-4" />
-        </Button>
+        <DeleteOrganizationModal id={row.getValue("uniqueId")} />
       </div>
     ),
   },
@@ -491,167 +504,192 @@ export const fleetColumns: ColumnDef<Fleet>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <EditFleetModal fleetNumber={row.getValue("fleetNumber")} regNumber={row.getValue("regNumber")} make={row.getValue("make")} model={row.getValue("model")} year={row.getValue("year")} type={row.getValue("type") as FleetType} color={row.getValue("color")} status={row.getValue("status") as FleetStatus} capacity={row.getValue("capacity")} ac={row.getValue("ac")} fcExpDate={new Date(row.getValue("fcExpDate"))} />
+        <EditFleetModal
+          fleetNumber={row.getValue("fleetNumber")}
+          regNumber={row.getValue("regNumber")}
+          make={row.getValue("make")}
+          model={row.getValue("model")}
+          year={row.getValue("year")}
+          type={row.getValue("type") as FleetType}
+          color={row.getValue("color")}
+          status={row.getValue("status") as FleetStatus}
+          capacity={row.getValue("capacity")}
+          ac={row.getValue("ac")}
+          fcExpDate={new Date(row.getValue("fcExpDate"))}
+        />
         <DeleteFleetModal id={row.getValue("uniqueId")} />
       </div>
     ),
   },
 ];
 
-export const routeColumns: ColumnDef<Route & {
-  stops: Stop[]
-}>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
-    {
-      id: "uniqueId",
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("uniqueId")}</div>
-      ),
-      accessorKey: "routeId",
-      enableHiding: true,
-    },
-    {
-      id: "routeName",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Route Name" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("routeName")}</div>
-      ),
-      accessorKey: "routeName",
-      enableSorting: true,
-      enableHiding: true,
-    },
-    {
-      id: "stops",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Stops" />
-        </div>
-      ),
-      cell: ({ row }) => <div className="min-w-max">
+export const routeColumns: ColumnDef<
+  Route & {
+    stops: Stop[];
+  }
+>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "uniqueId",
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+    ),
+    accessorKey: "routeId",
+    enableHiding: true,
+  },
+  {
+    id: "routeName",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Route Name" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("routeName")}</div>
+    ),
+    accessorKey: "routeName",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "stops",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Stops" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
         <HoverCard>
-          <HoverCardTrigger className="cursor-default">{row.original.stops?.length} stops</HoverCardTrigger>
+          <HoverCardTrigger className="cursor-default">
+            {row.original.stops?.length} stops
+          </HoverCardTrigger>
           <HoverCardContent>
             {row.original.stops.map((stop) => (
               <div className="text-left" key={stop.stopId}>
-                <li>
-                {stop.stopName}
-                </li>
+                <li>{stop.stopName}</li>
               </div>
             ))}
           </HoverCardContent>
         </HoverCard>
-      </div>,
-      accessorKey: "stops",
-    },
-    {
-      id: "passengerCount",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Passenger Count" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("passengerCount")}</div>
-      ),
-      accessorKey: "passengerCount",
-    },
-    {
-      id: "startTime",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Start Time" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("startTime")}</div>
-      ),
-      accessorKey: "startTime",
-    },
-    {
-      id: "endTime",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="End Time" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("endTime")}</div>
-      ),
-      accessorKey: "endTime",
-    },
-    {
-      id: "startPoint",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Start Point" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("startPoint")}</div>
-      ),
-      accessorKey: "startPoint",
-    },
-    {
-      id: "distance",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Distance" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("distance")}</div>
-      ),
-      accessorKey: "distance",
-    },
-    {
-      id: "duration",
-      header: ({ column }) => (
-        <div>
-          <DataTableColumnHeader column={column} title="Duration" />
-        </div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max">{row.getValue("duration")}</div>
-      ),
-      accessorKey: "duration",
-    },
-    {
-      id: "actions",
-      header: () => (
-        <div className="flex min-w-max items-center justify-center">Actions</div>
-      ),
-      cell: ({ row }) => (
-        <div className="min-w-max space-x-2">
-          <EditRouteModal routeName={row.getValue("routeName")} stops={row.getValue("stops")} passengerCount={row.getValue("passengerCount")} startTime={row.getValue("startTime")} endTime={row.getValue("endTime")} startPoint={row.getValue("startPoint")} distance={row.getValue("distance")} duration={row.getValue("duration")} />
-          <DeleteRouteModal id={row.getValue("uniqueId")} />
-        </div>
-      ),
-    },
-  ];
+      </div>
+    ),
+    accessorKey: "stops",
+  },
+  {
+    id: "passengerCount",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Passenger Count" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("passengerCount")}</div>
+    ),
+    accessorKey: "passengerCount",
+  },
+  {
+    id: "startTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Start Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("startTime")}</div>
+    ),
+    accessorKey: "startTime",
+  },
+  {
+    id: "endTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="End Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("endTime")}</div>
+    ),
+    accessorKey: "endTime",
+  },
+  {
+    id: "startPoint",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Start Point" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("startPoint")}</div>
+    ),
+    accessorKey: "startPoint",
+  },
+  {
+    id: "distance",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Distance" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("distance")}</div>
+    ),
+    accessorKey: "distance",
+  },
+  {
+    id: "duration",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Duration" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("duration")}</div>
+    ),
+    accessorKey: "duration",
+  },
+  {
+    id: "actions",
+    header: () => (
+      <div className="flex min-w-max items-center justify-center">Actions</div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max space-x-2">
+        <EditRouteModal
+          routeName={row.getValue("routeName")}
+          stops={row.getValue("stops")}
+          passengerCount={row.getValue("passengerCount")}
+          startTime={row.getValue("startTime")}
+          endTime={row.getValue("endTime")}
+          startPoint={row.getValue("startPoint")}
+          distance={row.getValue("distance")}
+          duration={row.getValue("duration")}
+        />
+        <DeleteRouteModal id={row.getValue("uniqueId")} />
+      </div>
+    ),
+  },
+];
 
 export const userType: filterType = [
   { label: "SUPER_ADMIN", value: "SUPER_ADMIN" },
@@ -760,7 +798,11 @@ export const userColumns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <EditUserModal id={row.getValue("uniqueId")} email={row.getValue("email")} role={row.getValue("role")} />
+        <EditUserModal
+          id={row.getValue("uniqueId")}
+          email={row.getValue("email")}
+          role={row.getValue("role")}
+        />
         <DeleteUserModal id={row.getValue("uniqueId")} />
       </div>
     ),
@@ -874,7 +916,12 @@ export const stopsColumns: ColumnDef<Stop>[] = [
     ),
     cell: ({ row }) => (
       <div className="min-w-max space-x-2">
-        <EditStopModal stopName={row.getValue("stopName")} passengerCount={row.getValue("passengerCount")} pickupTime={row.getValue("pickupTime")} dropTime={row.getValue("dropTime")} />
+        <EditStopModal
+          stopName={row.getValue("stopName")}
+          passengerCount={row.getValue("passengerCount")}
+          pickupTime={row.getValue("pickupTime")}
+          dropTime={row.getValue("dropTime")}
+        />
         <DeleteStopModal id={row.getValue("uniqueId")} />
       </div>
     ),
@@ -1332,7 +1379,7 @@ export const passengerFleetColumns: ColumnDef<Fleet>[] = [
   },
   {
     id: "ac",
-    header: ({ }) => <div>AC</div>,
+    header: ({}) => <div>AC</div>,
     cell: ({ row }) => <div className="min-w-max">{row.getValue("ac")}</div>,
     accessorKey: "ac",
   },
@@ -1559,5 +1606,3 @@ export const passengerStopColumns: ColumnDef<Stop>[] = [
     accessorKey: "passengerCount",
   },
 ];
-
-

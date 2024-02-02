@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { router, superAdminProcedure } from "../trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
+import { z } from "zod";
 
 export const organizationRouter = router({
   getOrganizations: superAdminProcedure.query(async ({ ctx }) => {
@@ -27,4 +28,40 @@ export const organizationRouter = router({
       });
     }
   }),
+  deleteOrganization: superAdminProcedure
+    .input(z.string())
+    .mutation(async ({ input }) => {
+      try {
+        const existingOrganization = await db.organization.findFirst({
+          where: {
+            organizationId: input,
+          },
+        });
+
+        if (!existingOrganization) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Organization not found",
+          });
+        }
+
+        const deletedOrganization = await db.organization.delete({
+          where: {
+            organizationId: input,
+          },
+        });
+
+        return {
+          success: true,
+          status: 201,
+          message: "Organization deleted successfully",
+          data: deletedOrganization.orgName,
+        };
+      } catch (error) {
+        console.log(error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+    }),
 });
