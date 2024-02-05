@@ -49,7 +49,7 @@ export const userRouter = router({
   }),
   addUser: publicProcedure.input(registerSchema).mutation(async ({ input }) => {
     try {
-      const { email, password, confirmPassword } = input;
+      const { name, email, password, confirmPassword } = input;
       if (!email || !password || !confirmPassword) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -64,7 +64,7 @@ export const userRouter = router({
       if (!existingUser) {
         const user = await db.user.create({
           data: {
-            name: "test",
+            name: name,
             email: email,
             password: await bcrypt.hash(password, 10),
           },
@@ -89,7 +89,7 @@ export const userRouter = router({
     .mutation(async ({ ctx, input }) => {
       try {
         const { userId } = ctx;
-        const { email, password, confirmPassword } = input;
+        const { name, email, password, confirmPassword } = input;
         if (!email || !password || !confirmPassword) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -102,7 +102,7 @@ export const userRouter = router({
         if (!existingUser) {
           const user = await db.user.create({
             data: {
-              name: "test",
+              name: name,
               email: email,
               password: await bcrypt.hash(password, 10),
               organizationId: adminUser?.organizationId,

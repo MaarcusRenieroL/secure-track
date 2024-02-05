@@ -8,15 +8,29 @@ import { useForm } from "react-hook-form";
 import type * as z from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { registerSchema } from "@/lib/zod-schema";
 import { client } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const { mutateAsync, isLoading } = client.user.addUser.useMutation({
     onSuccess: () => {
@@ -39,6 +53,7 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -56,11 +71,30 @@ export default function LoginPage() {
           <CardHeader>
             <CardTitle>Create your account</CardTitle>
             <CardDescription>
-              Enter your email and password to register
+              Enter your name, email and password to register
             </CardDescription>
           </CardHeader>
           <form onSubmit={form.handleSubmit(handleLogin)}>
             <CardContent className="space-y-5">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      <Label>Name</Label>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="name"
+                        placeholder="Enter your name here"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="email"
