@@ -1,8 +1,18 @@
 import { Trash } from "lucide-react";
-import { client } from "@/app/_trpc/client"
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { toast } from "@/components/ui/use-toast"
+import { client } from "@/app/_trpc/client";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 
 interface DeleteFleetModalProps {
   id: string;
@@ -21,11 +31,11 @@ export function DeleteFleetModal({ id }: DeleteFleetModalProps) {
         description: error.message,
       });
     },
-  })
+  });
 
   const handleDeleteRoute = async () => {
     await deleteFleet(id);
-  }
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -37,15 +47,17 @@ export function DeleteFleetModal({ id }: DeleteFleetModalProps) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your fleet data.
-            id : {id} 
+            This action cannot be undone. This will permanently delete your
+            fleet data. id : {id}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => handleDeleteRoute()}>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => handleDeleteRoute()}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }

@@ -145,7 +145,7 @@ model Route {
   driverId User?   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
   userId   String? @unique @db.ObjectId
 
-  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: NoAction, onUpdate: NoAction)
+  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: Cascade, onUpdate: NoAction)
   fleetId String? @unique @db.ObjectId
 
   stops Stop[]
@@ -163,10 +163,10 @@ model Stop {
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
 
-  route   Route?  @relation(fields: [routeId], references: [routeId], onDelete: NoAction, onUpdate: NoAction)
+  route   Route?  @relation(fields: [routeId], references: [routeId], onDelete: Cascade, onUpdate: NoAction)
   routeId String? @db.ObjectId
 
-  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: NoAction, onUpdate: NoAction)
+  fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: Cascade, onUpdate: NoAction)
   fleetId String? @db.ObjectId
 
   users User[]

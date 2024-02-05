@@ -336,7 +336,7 @@ export const fleetColumns: ColumnDef<Fleet>[] = [
     cell: ({ row }) => (
       <div className="min-w-max">{row.getValue("uniqueId")}</div>
     ),
-    accessorKey: "id",
+    accessorKey: "fleetId",
     enableHiding: true,
   },
   {
