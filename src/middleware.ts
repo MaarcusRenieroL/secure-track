@@ -25,23 +25,19 @@ export default withAuth(
     }
 
     if (["/auth/login", "/auth/register"].includes(req.nextUrl.pathname)) {
-      if (isAuth && token.role) {
-        redirectBasedOnRole(token.role as UserRole, pathname);
+      if (isAuth && token.role && token.isOnboarded) {
+        const url = redirectBasedOnRole(token.role as UserRole, pathname);
+        if (url) {
+          return NextResponse.redirect(new URL(url, req.url));
+        }
       }
     }
 
     if (isAuth) {
-      if (token.isOnboarded) {
-        const url = redirectBasedOnRole(token.role as UserRole, pathname);
-        if (url && pathname === "/") {
-          return NextResponse.redirect(new URL(url, req.url));
-        }
-      } else {
-        if (pathname !== "/onboarding" && !isApiRoute) {
-          return NextResponse.redirect(new URL("/onboarding", req.url));
-        }
+      const url = redirectBasedOnRole(token.role as UserRole, pathname);
+      if (url) {
+        return NextResponse.redirect(new URL(url, req.url));
       }
-
       const role: string = token?.role as unknown as string;
       const routes = `/${role.toLowerCase().replace("_", "-")}`;
       const protectedRoutes = [

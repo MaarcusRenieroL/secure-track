@@ -5,7 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import { FC, ReactNode, useState } from "react";
+import { SessionProvider } from "next-auth/react";
 import superjson from "superjson";
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -35,7 +37,9 @@ const Providers = ({ children }: LayoutProps) => {
     <client.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <Toaster />
-        {children}
+        <SessionProvider refetchWhenOffline={false}>
+          {children}
+        </SessionProvider>
       </QueryClientProvider>
     </client.Provider>
   )

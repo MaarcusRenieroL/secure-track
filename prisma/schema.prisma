@@ -36,6 +36,30 @@ model User {
   stopId String? @db.ObjectId
 }
 
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model Passenger {
+  profileId      String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName      String?
+  lastName       String?
+  email          String @unique
+  gender         Gender?
+  phoneNumber    String?
+  altPhoneNumber String?
+  addressLine1   String?
+  addressLine2   String?
+  addressLine3   String?
+  state          String?
+  city           String?
+  pincode        String?
+
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
+}
+
 enum OrganizationType {
   SCHOOL
   COLLEGE
@@ -62,6 +86,7 @@ model Organization {
   pincode             Int
 
   users         User[]
+  passengers    Passenger[]
   fleets        Fleet[]
   routes        Route[]
   stops         Stop[]

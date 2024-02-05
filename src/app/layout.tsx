@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "@/providers";
+import {OnboardingProtected} from "@/components/protected/OnboardingProtected"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Providers>
-        {children}
+          <OnboardingProtected />
+          {children}
         </Providers>
         </body>
     </html>
