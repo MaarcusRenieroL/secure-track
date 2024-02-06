@@ -3,7 +3,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import StatsCard from "@/app/_components/admin/dashboard/stats-card";
-import Map from "@/app/_components/admin/dashboard/map";
+import MapSection from "@/app/_components/admin/dashboard/map";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pin } from "lucide-react";
 
@@ -34,7 +34,7 @@ export default function AdminDashboard() {
             <Pin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <Map />
+            <MapSection />
           </CardContent>
         </Card>
       </div>

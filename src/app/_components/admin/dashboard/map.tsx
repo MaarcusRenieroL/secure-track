@@ -1,19 +1,27 @@
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+"use client";
 
-export default function Map() {
+import { useState } from "react";
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+  InfoWindow,
+} from "@vis.gl/react-google-maps";
 
-  const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
-  });
-  if (!isLoaded) return <div>Loading....</div>;
+export default function MapSection() {
+  const position = { lat: 13.04, lng: 80.27 };
+
   return (
-    <GoogleMap
-      mapContainerClassName="map"
-      zoom={8}
-      center={{ lat: -34.397, lng: 150.644 }}
-    >
-      <Marker position={{ lat: -34.397, lng: 150.644 }} />
-    </GoogleMap>
+    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ""}>
+      <Map
+        zoom={10}
+        center={position}
+        mapId={process.env.NEXT_PUBLIC_MAP_ID}
+        className="map"
+      >
+        <AdvancedMarker position={position}></AdvancedMarker>
+      </Map>
+    </APIProvider>
   );
 }
