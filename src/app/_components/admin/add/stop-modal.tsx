@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -294,7 +295,9 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
               />
             </div>
             <DialogFooter>
-              <Button variant="outline">Cancel</Button>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>

@@ -1,8 +1,23 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,7 +41,16 @@ interface EditRouteModalProps {
   duration: number;
 }
 
-export default function EditRouteModal({ routeName, stops, passengerCount, startTime, endTime, startPoint, distance, duration }: EditRouteModalProps) {
+export default function EditRouteModal({
+  routeName,
+  stops,
+  passengerCount,
+  startTime,
+  endTime,
+  startPoint,
+  distance,
+  duration,
+}: EditRouteModalProps) {
   const { mutateAsync: editRoute } = client.route.updateRoute.useMutation({
     onSuccess: () => {
       toast({
@@ -212,7 +236,9 @@ export default function EditRouteModal({ routeName, stops, passengerCount, start
               <StopsField stops={stops} />
             </div>
             <DialogFooter>
-              <Button variant="outline">Cancel</Button>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>

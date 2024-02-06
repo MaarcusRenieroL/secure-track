@@ -4,12 +4,37 @@ import { client } from "@/app/_trpc/client";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 
 import { CalendarIcon, Edit } from "lucide-react";
@@ -36,7 +61,19 @@ interface EditFleetModalProps {
   ac: boolean;
 }
 
-export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type, color, status, fcExpDate, capacity, ac }: EditFleetModalProps) {
+export function EditFleetModal({
+  fleetNumber,
+  regNumber,
+  make,
+  model,
+  year,
+  type,
+  color,
+  status,
+  fcExpDate,
+  capacity,
+  ac,
+}: EditFleetModalProps) {
   const { mutateAsync: editFleet } = client.fleet.updateFleet.useMutation({
     onSuccess: () => {
       toast({
@@ -66,7 +103,9 @@ export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type
       ac: ac,
     },
   });
-  const handleFleetData = async (data: z.infer<typeof updateFleetFormSchema>) => {
+  const handleFleetData = async (
+    data: z.infer<typeof updateFleetFormSchema>,
+  ) => {
     await editFleet(data);
   };
   return (
@@ -197,7 +236,7 @@ export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                        disabled
+                      disabled
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -275,8 +314,9 @@ export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type
                         <FormControl>
                           <Button
                             variant={"outline"}
-                            className={`"w-[240px] pl-3 text-left font-normal ${!field.value && "text-muted-foreground"
-                              }`}
+                            className={`"w-[240px] pl-3 text-left font-normal ${
+                              !field.value && "text-muted-foreground"
+                            }`}
                           >
                             {field.value ? (
                               format(field.value, "PPP")
@@ -326,7 +366,7 @@ export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type
               <FormField
                 control={form.control}
                 name="ac"
-                render={({ }) => (
+                render={({}) => (
                   <FormItem className="p-4">
                     <FormLabel>
                       <Label>AC</Label>
@@ -348,7 +388,9 @@ export function EditFleetModal({ fleetNumber, regNumber, make, model, year, type
               />
             </div>
             <DialogFooter>
-              <Button variant="outline">Cancel</Button>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>

@@ -1,8 +1,23 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +35,12 @@ interface EditStopModalProps {
   passengerCount: number;
 }
 
-export default function EditStopModal({ stopName, pickupTime, dropTime, passengerCount }: EditStopModalProps) {
+export default function EditStopModal({
+  stopName,
+  pickupTime,
+  dropTime,
+  passengerCount,
+}: EditStopModalProps) {
   const { mutateAsync: editStop } = client.stop.updateStop.useMutation({
     onSuccess: () => {
       toast({
@@ -143,7 +163,9 @@ export default function EditStopModal({ stopName, pickupTime, dropTime, passenge
               />
             </div>
             <DialogFooter>
-              <Button variant="outline">Cancel</Button>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
               <Button type="submit">Save Changes</Button>
             </DialogFooter>
           </form>
