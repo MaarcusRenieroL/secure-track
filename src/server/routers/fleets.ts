@@ -16,8 +16,8 @@ export const fleetRouter = router({
         const fleets = await db.fleet.findMany({
           where: {
             organizationId: user.organizationId,
-          }
-        })
+          },
+        });
 
         return fleets;
       } else {
@@ -25,101 +25,127 @@ export const fleetRouter = router({
 
         return fleets;
       }
-
     } catch (error) {
       console.log(error);
-
     }
   }),
-  addFleet: adminProcedure.input(fleetFormSchema).mutation(async ({ ctx, input }) => {
-    try {
-      const { userId } = ctx;
-      const { fleetNumber, regNumber, make, model, year, type, color, status, fcExpDate, capacity, ac } = input;
+  addFleet: adminProcedure
+    .input(fleetFormSchema)
+    .mutation(async ({ ctx, input }) => {
+      try {
+        const { userId } = ctx;
+        const {
+          fleetNumber,
+          regNumber,
+          make,
+          model,
+          year,
+          type,
+          color,
+          status,
+          fcExpDate,
+          capacity,
+          ac,
+        } = input;
 
-      const adminUser = await getUserById(userId);
+        const adminUser = await getUserById(userId);
 
-      const existingFleet = await db.fleet.findFirst({
-        where: {
-          fleetNumber: fleetNumber,
-        }
-      })
-      if (!existingFleet) {
-        const addNewFleet = await db.fleet.create({
-          data: { fleetNumber, regNumber, make, model, year: year, type, color, status, fcExpDate, capacity: capacity, ac, organizationId: adminUser?.organizationId },
-        });
-        return {
-          success: true,
-          status: 201,
-          message: "Fleet Added Successfully",
-          data: addNewFleet.fleetNumber,
-        };
-      } else {
-        throw new TRPCError({
-          code: "CONFLICT",
-          message: "Fleet already exists"
-        })
-      }
-    } catch (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-      });
-    }
-  }),
-  updateFleet: adminProcedure.input(updateFleetFormSchema).mutation(async ({ input }) => {
-    try {
-      const { fleetNumber, fcExpDate } = input;
-
-
-      const existingFleet = await db.fleet.findFirst({
-        where: {
-          fleetNumber: fleetNumber,
-        }
-      })
-      if (existingFleet) {
-        const updateFleet = await db.fleet.update({
+        const existingFleet = await db.fleet.findFirst({
           where: {
-            fleetNumber: fleetNumber
+            fleetNumber: fleetNumber,
           },
-          data: { fcExpDate: fcExpDate },
         });
-        return {
-          success: true,
-          status: 201,
-          message: "Fleet updated Successfully",
-          data: updateFleet.fleetNumber,
-        };
-      } else {
+        if (!existingFleet) {
+          const addNewFleet = await db.fleet.create({
+            data: {
+              fleetNumber,
+              regNumber,
+              make,
+              model,
+              year: year,
+              type,
+              color,
+              status,
+              fcExpDate,
+              capacity: capacity,
+              ac,
+              organizationId: adminUser?.organizationId,
+            },
+          });
+          return {
+            success: true,
+            status: 201,
+            message: "Fleet Added Successfully",
+            data: addNewFleet.fleetNumber,
+          };
+        } else {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Fleet already exists",
+          });
+        }
+      } catch (error) {
         throw new TRPCError({
-          code: "CONFLICT",
-          message: "Fleet doesn't exists"
-        })
+          code: "INTERNAL_SERVER_ERROR",
+        });
       }
-    } catch (error) {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-      });
-    }
-  }),
+    }),
+  updateFleet: adminProcedure
+    .input(updateFleetFormSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const { fleetNumber, fcExpDate } = input;
+
+        const existingFleet = await db.fleet.findFirst({
+          where: {
+            fleetNumber: fleetNumber,
+          },
+        });
+        if (existingFleet) {
+          const updateFleet = await db.fleet.update({
+            where: {
+              fleetNumber: fleetNumber,
+            },
+            data: { fcExpDate: fcExpDate },
+          });
+          return {
+            success: true,
+            status: 201,
+            message: "Fleet updated Successfully",
+            data: updateFleet.fleetNumber,
+          };
+        } else {
+          throw new TRPCError({
+            code: "CONFLICT",
+            message: "Fleet doesn't exists",
+          });
+        }
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+        });
+      }
+    }),
   deleteFleet: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     try {
       const fleet = await db.fleet.findFirst({
         where: {
           fleetId: input,
-        }
+        },
       });
 
       if (!fleet) {
         throw new TRPCError({
           code: "CONFLICT",
-          message: "Fleet doesn't exists"
-        })
+          message: "Fleet doesn't exists",
+        });
       }
 
       const deletedFleet = await db.fleet.delete({
         where: {
           fleetId: input,
-        }
-      })
+        },
+      });
 
       return {
         success: true,
@@ -127,11 +153,10 @@ export const fleetRouter = router({
         message: "Fleet updated Successfully",
         data: deletedFleet.fleetNumber,
       };
-
     } catch (error) {
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
       });
     }
-  })
-})
+  }),
+});
