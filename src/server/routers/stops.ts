@@ -15,7 +15,7 @@ export const stopRouter = router({
       if (!user) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "You are not authorized to make this request"
+          message: "You are not authorized to make this request",
         });
       }
 
@@ -27,63 +27,83 @@ export const stopRouter = router({
         const stops = await db.stop.findMany({
           where: {
             organizationId: user.organizationId,
-          }
+          },
         });
 
         return stops;
       }
-
     } catch (error) {
       console.log(error);
       throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR"
-      })
+        code: "INTERNAL_SERVER_ERROR",
+      });
     }
   }),
   addStop: adminProcedure.input(stopSchema).mutation(async ({ ctx, input }) => {
     try {
       const { userId } = ctx;
-      const { stopName, passengerCount, lat, lng, pickupTime, dropTime, fleetNumber, routeName } = input;
+      const {
+        stopName,
+        passengerCount,
+        pickupTime,
+        dropTime,
+        fleetNumber,
+        routeName,
+      } = input;
 
       const adminUser = await getUserById(userId);
 
       if (!adminUser) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "User doesn't exist"
+          message: "User doesn't exist",
         });
       }
 
       const fleet = await db.fleet.findFirst({
         where: {
           fleetNumber: fleetNumber,
-        }
+        },
       });
 
       if (!fleet) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Fleet doesn't exist"
+          message: "Fleet doesn't exist",
         });
       }
 
       const route = await db.route.findFirst({
         where: {
           routeName: routeName,
-        }
+        },
       });
 
       if (!route) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "Route doesn't exist"
+          message: "Route doesn't exist",
         });
       }
 
+      const location = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${stopName}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`,
+      ).then((response) => response.json());
+
+      console.log(location.results[0].geometry.location.lat);
+
       const newStop = await db.stop.create({
         data: {
-          stopName, passengerCount, lat: parseFloat(lat), lng: parseFloat(lng), pickupTime, dropTime, organizationId: adminUser.organizationId, routeId: route.routeId, fleetId: fleet.fleetId
-        }
+          stopName,
+          passengerCount,
+          lat: location.results[0].geometry.location.lat,
+          lng: location.results[0].geometry.location.lng,
+          pickupTime,
+          dropTime,
+          organizationId: adminUser.organizationId,
+          routeId: route.routeId,
+          fleetId: fleet.fleetId,
+        },
       });
 
       return {
@@ -92,7 +112,6 @@ export const stopRouter = router({
         message: "Stop Added Successfully",
         data: newStop.stopName,
       };
-
     } catch (error) {
       console.log(error);
       throw new TRPCError({
@@ -100,77 +119,56 @@ export const stopRouter = router({
       });
     }
   }),
-  updateStop: adminProcedure.input(updateStopSchema).mutation(async ({ input }) => {
-    try {
-      const { stopName, passengerCount, pickupTime, dropTime } = input;
+  updateStop: adminProcedure
+    .input(updateStopSchema)
+    .mutation(async ({ input }) => {
+      try {
+        const { stopName, passengerCount, pickupTime, dropTime } = input;
 
-      const existingStop = await db.stop.findFirst({
-        where: {
-          stopName: stopName,
+        const existingStop = await db.stop.findFirst({
+          where: {
+            stopName: stopName,
+          },
+        });
+
+        if (!existingStop) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "Stop doesn't exist",
+          });
         }
-      });
 
-      if (!existingStop) {
+        const updatedStop = await db.stop.update({
+          where: {
+            stopName: stopName,
+          },
+          data: {
+            stopName,
+            passengerCount,
+            pickupTime,
+            dropTime,
+          },
+        });
+
+        return {
+          success: true,
+          status: 201,
+          message: "Stop updated successfully",
+          data: updatedStop.stopName,
+        };
+      } catch (error) {
+        console.log(error);
         throw new TRPCError({
-          code: "NOT_FOUND",
-          message: "Stop doesn't exist"
+          code: "INTERNAL_SERVER_ERROR",
         });
       }
-
-      // const fleet = await db.fleet.findFirst({
-      //   where: {
-      //     fleetNumber: fleetNumber,
-      //   }
-      // });
-
-      // if (!fleet) {
-      //   throw new TRPCError({
-      //     code: "NOT_FOUND",
-      //     message: "Fleet doesn't exist"
-      //   });
-      // }
-
-      // const route = await db.route.findFirst({
-      //   where: {
-      //     routeName: routeName,
-      //   }
-      // });
-
-      // if (!route) {
-      //   throw new TRPCError({
-      //     code: "NOT_FOUND",
-      //     message: "Route doesn't exist"
-      //   });
-      // }
-
-      const updatedStop = await db.stop.update({
-        where: {
-          stopName: stopName,
-        }, data: {
-          stopName, passengerCount, pickupTime, dropTime, 
-          // fleetId: fleet.fleetId, routeId: route.routeId,
-        }
-      });
-
-      return {
-        success: true,
-        status: 201,
-        message: "Stop updated successfully",
-        data: updatedStop.stopName
-      }
-    } catch (error) {
-      console.log(error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR"
-      });
-    }
-  }),
+    }),
   deleteStop: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     try {
       const existingStop = await db.stop.findFirst({
         where: {
           stopId: input,
-        }
+        },
       });
 
       if (!existingStop) {
@@ -183,20 +181,20 @@ export const stopRouter = router({
       const deletedStop = await db.stop.delete({
         where: {
           stopId: input,
-        }
+        },
       });
 
       return {
         success: true,
         status: 201,
         message: "Stop deleted successfully",
-        data: deletedStop.stopName
-      }
+        data: deletedStop.stopName,
+      };
     } catch (error) {
       console.log(error);
       throw new TRPCError({
         code: "INTERNAL_SERVER_ERROR",
       });
     }
-  })
-})
+  }),
+});

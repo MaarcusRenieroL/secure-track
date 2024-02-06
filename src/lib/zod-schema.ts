@@ -373,12 +373,6 @@ export const stopSchema = z.object({
     .min(2, {
       message: "Stop Name must be at least 2 characters long",
     }),
-  lat: z.string({
-    required_error: "Latitude is required",
-  }),
-  lng: z.string({
-    required_error: "Longitude is required",
-  }),
   fleetNumber: z.string({
     required_error: "Fleet Number is required",
   }),

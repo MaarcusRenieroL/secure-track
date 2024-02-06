@@ -1,8 +1,22 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,10 +27,20 @@ import { client } from "@/app/_trpc/client";
 import { toast } from "@/components/ui/use-toast";
 import { Fleet, Route } from "@prisma/client";
 import { cn } from "@/lib/utils";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Command, CommandInput, CommandEmpty, CommandGroup, CommandItem } from "@/components/ui/command";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
 import { CheckIcon } from "lucide-react";
-import { CaretSortIcon  } from "@radix-ui/react-icons";
+import { CaretSortIcon } from "@radix-ui/react-icons";
 
 interface AddStopModalProps {
   fleets: Fleet[];
@@ -42,8 +66,6 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
     defaultValues: {
       routeName: "",
       fleetNumber: "",
-      lat: "",
-      lng: "",
       stopName: "",
       pickupTime: "",
       dropTime: "",
@@ -81,44 +103,6 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                       <Input
                         type="text"
                         placeholder="Enter stop name"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lat"
-                render={({ field }) => (
-                  <FormItem className="p-4">
-                    <FormLabel>
-                      <Label>Latitude</Label>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter latitude"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lng"
-                render={({ field }) => (
-                  <FormItem className="p-4">
-                    <FormLabel>
-                      <Label>Longitude</Label>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter longitude"
                         {...field}
                       />
                     </FormControl>
@@ -197,13 +181,13 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                             role="combobox"
                             className={cn(
                               "w-full justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
                               ? fleets.find(
-                                (fleet) => fleet.fleetNumber === field.value
-                              )?.fleetNumber
+                                  (fleet) => fleet.fleetNumber === field.value,
+                                )?.fleetNumber
                               : "Select fleet number"}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
@@ -222,7 +206,10 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                                 value={fleet.fleetNumber}
                                 key={fleet.fleetNumber}
                                 onSelect={() => {
-                                  form.setValue("fleetNumber", fleet.fleetNumber)
+                                  form.setValue(
+                                    "fleetNumber",
+                                    fleet.fleetNumber,
+                                  );
                                 }}
                               >
                                 {fleet.fleetNumber}
@@ -231,7 +218,7 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                                     "ml-auto h-4 w-4",
                                     fleet.fleetNumber === field.value
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                               </CommandItem>
@@ -258,13 +245,13 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                             role="combobox"
                             className={cn(
                               "w-full justify-between",
-                              !field.value && "text-muted-foreground"
+                              !field.value && "text-muted-foreground",
                             )}
                           >
                             {field.value
                               ? routes.find(
-                                (route) => route.routeName === field.value
-                              )?.routeName
+                                  (route) => route.routeName === field.value,
+                                )?.routeName
                               : "Select route name"}
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
@@ -283,7 +270,7 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                                 value={route.routeName}
                                 key={route.routeName}
                                 onSelect={() => {
-                                  form.setValue("routeName", route.routeName)
+                                  form.setValue("routeName", route.routeName);
                                 }}
                               >
                                 {route.routeName}
@@ -292,7 +279,7 @@ export default function AddStopModal({ fleets, routes }: AddStopModalProps) {
                                     "ml-auto h-4 w-4",
                                     route.routeName === field.value
                                       ? "opacity-100"
-                                      : "opacity-0"
+                                      : "opacity-0",
                                   )}
                                 />
                               </CommandItem>
