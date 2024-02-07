@@ -1,12 +1,17 @@
 import { routeSchema, updateRouteSchema } from "@/lib/zod-schema";
-import { adminProcedure, combinedProcedure, router } from "../trpc";
+import {
+  adminProcedure,
+  combinedProcedure,
+  privateProcedure,
+  router,
+} from "../trpc";
 import { getUserById } from "@/lib/helpers";
 import { db } from "@/lib/db";
 import { TRPCError } from "@trpc/server";
 import * as z from "zod";
 
 export const routeRouter = router({
-  getRoutes: combinedProcedure.query(async ({ ctx }) => {
+  getRoutes: privateProcedure.query(async ({ ctx }) => {
     try {
       const { userId } = ctx;
 

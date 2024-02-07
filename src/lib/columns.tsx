@@ -1385,7 +1385,11 @@ export const passengerFleetColumns: ColumnDef<Fleet>[] = [
   },
 ];
 
-export const passengerRouteColumns: ColumnDef<Route>[] = [
+export const passengerRouteColumns: ColumnDef<
+  Route & {
+    stops: Stop[];
+  }
+>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -1408,23 +1412,40 @@ export const passengerRouteColumns: ColumnDef<Route>[] = [
     enableHiding: false,
   },
   {
-    id: "routeNumber",
+    id: "routeName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Route Number" />
+      <DataTableColumnHeader column={column} title="Route Name" />
     ),
     cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("routeNumber")}</div>
+      <div className="min-w-max">{row.getValue("routeName")}</div>
     ),
-    accessorKey: "routeNumber",
+    accessorKey: "routeName",
     enableSorting: true,
     enableHiding: true,
   },
   {
     id: "stops",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Stops" />
+      <div>
+        <DataTableColumnHeader column={column} title="Stops" />
+      </div>
     ),
-    cell: ({ row }) => <div className="min-w-max">{row.getValue("stops")}</div>,
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        <HoverCard>
+          <HoverCardTrigger className="cursor-default">
+            {row.original.stops?.length} stops
+          </HoverCardTrigger>
+          <HoverCardContent>
+            {row.original.stops.map((stop) => (
+              <div className="text-left" key={stop.stopId}>
+                <li>{stop.stopName}</li>
+              </div>
+            ))}
+          </HoverCardContent>
+        </HoverCard>
+      </div>
+    ),
     accessorKey: "stops",
   },
   {
@@ -1476,16 +1497,6 @@ export const passengerRouteColumns: ColumnDef<Route>[] = [
       <div className="min-w-max">{row.getValue("duration")}</div>
     ),
     accessorKey: "duration",
-  },
-  {
-    id: "driverId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Driver Id" />
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("driverId")}</div>
-    ),
-    accessorKey: "driverId",
   },
 ];
 
