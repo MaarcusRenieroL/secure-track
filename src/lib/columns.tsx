@@ -1206,50 +1206,6 @@ export const crewStopColumns: ColumnDef<Stop>[] = [
     enableHiding: true,
   },
   {
-    id: "lat",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Latitude" />
-      </div>
-    ),
-    cell: ({ row }) => <div className="min-w-max">{row.getValue("lat")}</div>,
-    accessorKey: "lat",
-  },
-  {
-    id: "lng",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Longitude" />
-      </div>
-    ),
-    cell: ({ row }) => <div className="min-w-max">{row.getValue("lng")}</div>,
-    accessorKey: "lng",
-  },
-  {
-    id: "fleetNumber",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Fleet Number" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("fleetNumber")}</div>
-    ),
-    accessorKey: "fleetNumber",
-  },
-  {
-    id: "routeNumber",
-    header: ({ column }) => (
-      <div>
-        <DataTableColumnHeader column={column} title="Route Number" />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="min-w-max">{row.getValue("routeNumber")}</div>
-    ),
-    accessorKey: "routeNumber",
-  },
-  {
     id: "pickupTime",
     header: ({ column }) => (
       <div>

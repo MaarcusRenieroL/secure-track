@@ -1,7 +1,10 @@
+import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { crewStopColumns } from "@/lib/columns";
 
-export default function CrewStopsPage() {
+export default async function CrewStopsPage() {
+  const stops = await server.stop.getStops();
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -10,7 +13,7 @@ export default function CrewStopsPage() {
       <div className="mt-10">
         <DataTable
           columns={crewStopColumns}
-          data={[]}
+          data={stops}
           placeholder="Search Stop Name"
           searchColumnName="stopName"
         />
