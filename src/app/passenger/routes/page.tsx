@@ -2,6 +2,8 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { passengerRouteColumns } from "@/lib/columns";
 
+export const dynamic = "force-dynamic";
+
 export default async function PassengerRoutesPage() {
   const routes = await server.route.getRoutes();
   return (

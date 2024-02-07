@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import AddRouteModal from "@/app/_components/admin/add/route-modal";
 import { server } from "@/app/_trpc/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminRoutesPage() {
   const fleets = await db.fleet.findMany();
   const users = await db.user.findMany();

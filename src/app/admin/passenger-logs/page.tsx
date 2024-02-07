@@ -2,8 +2,9 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { passengerLogColumns } from "@/lib/columns";
 
-export default async function AdminPassengerLogsPage() {
+export const dynamic = "force-dynamic";
 
+export default async function AdminPassengerLogsPage() {
   const passengerLogs = await server.passengerLog.getPassengerLogs();
 
   return (

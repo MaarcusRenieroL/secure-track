@@ -2,8 +2,9 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { userColumns, userType } from "@/lib/columns";
 
-export default async function SuperAdminUsersPage() {
+export const dynamic = "force-dynamic";
 
+export default async function SuperAdminUsersPage() {
   const users = await server.user.getUsers();
 
   return (

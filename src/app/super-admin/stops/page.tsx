@@ -2,10 +2,11 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { stopsColumns } from "@/lib/columns";
 
-export default async function SuperAdminStopsPage() {
+export const dynamic = "force-dynamic";
 
+export default async function SuperAdminStopsPage() {
   const stops = await server.stop.getStops();
-  
+
   return (
     <>
       <div className="flex items-center justify-center">

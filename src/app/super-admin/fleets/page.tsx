@@ -2,9 +2,10 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { fleetType, fleetColumns } from "@/lib/columns";
 
+export const dynamic = "force-dynamic";
+
 export default async function SuperAdminFleetsPage() {
-  
-  const fleets = await server.fleet.getFleets() || [];
+  const fleets = (await server.fleet.getFleets()) || [];
 
   return (
     <>

@@ -2,6 +2,8 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { orgColumns, orgType } from "@/lib/columns";
 
+export const dynamic = "force-dynamic";
+
 export default async function SuperAdminOrganizationsPage() {
   const organizations = await server.organization.getOrganizations();
 

@@ -2,8 +2,9 @@ import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { trackingLogColumns } from "@/lib/columns";
 
-export default async function AdminTrackingLogsPage() {
+export const dynamic = "force-dynamic";
 
+export default async function AdminTrackingLogsPage() {
   const trackingLogs = await server.trackingLog.getTrackingLogs();
 
   return (

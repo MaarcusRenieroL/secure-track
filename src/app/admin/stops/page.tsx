@@ -3,10 +3,11 @@ import { stopsColumns } from "@/lib/columns";
 import { server } from "@/app/_trpc/server";
 import AddStopModal from "@/app/_components/admin/add/stop-modal";
 
-export default async function AdminStopsPage() {
+export const dynamic = "force-dynamic";
 
+export default async function AdminStopsPage() {
   const stops = await server.stop.getStops();
-  const fleets = await server.fleet.getFleets() || [];
+  const fleets = (await server.fleet.getFleets()) || [];
   const routes = await server.route.getRoutes();
 
   return (

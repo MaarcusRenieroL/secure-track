@@ -3,6 +3,8 @@ import { userColumns, userType } from "@/lib/columns";
 import AddNewUserModal from "@/app/_components/admin/add/user-modal";
 import { server } from "@/app/_trpc/server";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminUsersPage() {
   const users = await server.user.getUsers();
   return (
