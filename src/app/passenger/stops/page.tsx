@@ -1,7 +1,10 @@
+import { server } from "@/app/_trpc/server";
 import { DataTable } from "@/components/tanstack-react-table/data-table";
 import { passengerStopColumns } from "@/lib/columns";
 
-export default function SuperAdminRoutesPage() {
+export default async function SuperAdminRoutesPage() {
+  const stops = await server.stop.getStops();
+
   return (
     <>
       <div className="flex items-center justify-center">
@@ -10,7 +13,7 @@ export default function SuperAdminRoutesPage() {
       <div className="mt-10">
         <DataTable
           columns={passengerStopColumns}
-          data={[]}
+          data={stops}
           placeholder="Search Stop Name"
           searchColumnName="stopName"
         />
