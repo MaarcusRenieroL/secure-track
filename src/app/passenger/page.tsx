@@ -2,8 +2,33 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Pin } from "lucide-react";
 import PassengerStatsCard from "../_components/passenger/dashboard/stats-card";
 import MapSection from "../_components/admin/dashboard/map";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { db } from "@/lib/db";
 
-export default function PassengerDashboardPage() {
+export default async function PassengerDashboardPage() {
+  const session = await getServerSession(authOptions);
+  const crew = await db.user.findFirst({
+    where: {
+      routeId: session?.user.routeId,
+      role: "CREW",
+    },
+  });
+  const crewDetails = await db.crew.findFirst({
+    where: {
+      email: crew?.email,
+    },
+  });
+  const route = await db.route.findFirst({
+    where: {
+      routeId: crew?.routeId ?? "",
+    },
+  });
+  const fleet = await db.fleet.findFirst({
+    where: {
+      route: route,
+    },
+  });
   return (
     <div className="flex-1 space-y-4">
       <div className="flex items-center justify-between space-y-2">
@@ -11,7 +36,7 @@ export default function PassengerDashboardPage() {
           Passenger Dashboard
         </h2>
       </div>
-      <PassengerStatsCard />
+      <PassengerStatsCard fleet={fleet} crewDetails={crewDetails} />
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-2xl font-bold">Live Tracking</CardTitle>

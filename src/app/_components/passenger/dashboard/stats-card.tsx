@@ -11,8 +11,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Crew, Fleet } from "@prisma/client";
 
-export default function PassengerStatsCard() {
+interface PassengerStatsCardProps {
+  crewDetails: Crew;
+  fleet: Fleet;
+}
+
+export default function PassengerStatsCard({
+  crewDetails,
+  fleet,
+}: PassengerStatsCardProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -69,15 +78,15 @@ export default function PassengerStatsCard() {
               </DialogHeader>
               <div className="flex space-x-2">
                 <h1>Driver Name: </h1>
-                <p>Name</p>
+                <p>{crewDetails.firstName + " " + crewDetails.lastName}</p>
               </div>
               <div className="flex space-x-2">
                 <h1>Driver Contact Number: </h1>
-                <p>Phone Number</p>
+                <p>{crewDetails.phoneNumber}</p>
               </div>
               <div className="flex space-x-2">
                 <h1>Vechile Registration Number: </h1>
-                <p>Reg number</p>
+                <p>{fleet.regNumber}</p>
               </div>
               <DialogFooter>
                 <DialogClose>

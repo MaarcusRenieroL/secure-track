@@ -20,6 +20,9 @@ export const authOptions: NextAuthOptions = {
         session.user.email = token.email;
         session.user.role = token.role as UserRole;
         session.user.isOnboarded = token.isOnboarded;
+        session.user.organizationId = token.organizationId;
+        session.user.routeId = token.routeId;
+        session.user.stopId = token.stopId;
       }
       return session;
     },
@@ -45,6 +48,9 @@ export const authOptions: NextAuthOptions = {
         email: dbUser.email,
         role: dbUser.role,
         isOnboarded: dbUser.isOnboarded,
+        organizationId: dbUser.organizationId,
+        routeId: dbUser.routeId ?? "",
+        stopId: dbUser.stopId,
       };
     },
   },
@@ -80,7 +86,10 @@ export const authOptions: NextAuthOptions = {
             return null;
           }
 
-          const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+          const isValidPassword = await bcrypt.compare(
+            credentials.password,
+            user.password,
+          );
 
           if (!isValidPassword) {
             return null;

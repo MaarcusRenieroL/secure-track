@@ -30,7 +30,8 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
 
-  route Route?
+  route Route? @relation(fields: [routeId], references: [routeId])
+  routeId String? @db.ObjectId
 
   stop   Stop?   @relation(fields: [stopId], references: [stopId])
   stopId String? @db.ObjectId
@@ -43,6 +44,25 @@ enum Gender {
 
 model Passenger {
   profileId      String @id @default(auto()) @map("_id") @db.ObjectId
+  firstName      String?
+  lastName       String?
+  email          String @unique
+  gender         Gender?
+  phoneNumber    String?
+  altPhoneNumber String?
+  addressLine1   String?
+  addressLine2   String?
+  addressLine3   String?
+  state          String?
+  city           String?
+  pincode        String?
+
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
+}
+
+model Crew {
+  crewId      String @id @default(auto()) @map("_id") @db.ObjectId
   firstName      String?
   lastName       String?
   email          String @unique
@@ -87,6 +107,7 @@ model Organization {
 
   users         User[]
   passengers    Passenger[]
+  crews         Crew[]
   fleets        Fleet[]
   routes        Route[]
   stops         Stop[]
@@ -142,8 +163,7 @@ model Route {
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
 
-  driverId User?   @relation(fields: [userId], references: [userId], onDelete: NoAction, onUpdate: NoAction)
-  userId   String? @unique @db.ObjectId
+  users User[]
 
   fleet   Fleet?  @relation(fields: [fleetId], references: [fleetId], onDelete: Cascade, onUpdate: NoAction)
   fleetId String? @unique @db.ObjectId
