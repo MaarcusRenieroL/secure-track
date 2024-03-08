@@ -9,6 +9,7 @@ import { stopRouter } from "./routers/stops";
 import { trackingLogRouter } from "./routers/tracking-logs";
 import { passengerLogRouter } from "./routers/passenger-logs";
 import { organizationRouter } from "./routers/organizations";
+import { alertLogRouter } from "./routers/alert-logs";
 
 export const appRouter = router({
   user: userRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   stop: stopRouter,
   trackingLog: trackingLogRouter,
   passengerLog: passengerLogRouter,
+  alertLog: alertLogRouter,
   organization: organizationRouter,
 });
 

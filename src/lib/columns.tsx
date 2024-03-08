@@ -10,6 +10,7 @@ import type {
   passengerlogs,
   FleetType,
   FleetStatus,
+  alertlogs,
 } from "@prisma/client";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Edit, Trash } from "lucide-react";
@@ -1555,5 +1556,78 @@ export const passengerStopColumns: ColumnDef<Stop>[] = [
       <div className="min-w-max">{row.getValue("passengerCount")}</div>
     ),
     accessorKey: "passengerCount",
+  },
+];
+
+export const alertLogColumns: ColumnDef<alertlogs>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+        className="translate-y-[2px]"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+        className="translate-y-[2px]"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    id: "incidentType",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Incident Type" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("incidentType")}</div>
+    ),
+    accessorKey: "incidentType",
+    enableHiding: true,
+  },
+  {
+    id: "incidentTime",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Incident Time" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">
+        {new Date(row.getValue("incidentTime")).toDateString()}
+      </div>
+    ),
+    accessorKey: "incidentTime",
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "lat",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Latitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lat")}</div>,
+    accessorKey: "lat",
+  },
+  {
+    id: "lng",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Longitude" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("lng")}</div>,
+    accessorKey: "lng",
   },
 ];

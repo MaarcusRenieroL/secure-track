@@ -11,8 +11,8 @@ import { DataTableFacetedFilter } from "@/components/tanstack-react-table/data-t
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
-  searchColumnName: string;
-  searchColumnPlaceholder: string;
+  searchColumnName?: string;
+  searchColumnPlaceholder?: string;
   facetedFilterColumn1?: string;
   facetedFilterColumn2?: string;
   facetedFilterColumn3?: string;
@@ -45,19 +45,21 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-center">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
-          placeholder={searchColumnPlaceholder}
-          value={
-            (table.getColumn(searchColumnName)?.getFilterValue() as string) ??
-            ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn(searchColumnName)
-              ?.setFilterValue(event.target.value)
-          }
-          className="h-8 w-[150px] lg:w-[250px]"
-        />
+        {searchColumnName && (
+          <Input
+            placeholder={searchColumnPlaceholder}
+            value={
+              (table.getColumn(searchColumnName)?.getFilterValue() as string) ??
+              ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn(searchColumnName)
+                ?.setFilterValue(event.target.value)
+            }
+            className="h-8 w-[150px] lg:w-[250px]"
+          />
+        )}
         {facetedFilterColumn1 && facetedFilterColumnOptions1 && (
           <DataTableFacetedFilter
             column={table.getColumn(facetedFilterColumn1)}

@@ -113,6 +113,7 @@ model Organization {
   stops         Stop[]
   trackinglogs  trackinglogs[]
   passengerlogs passengerlogs[]
+  alertlogs alertlogs[]
 }
 
 enum FleetType {
@@ -218,4 +219,15 @@ model passengerlogs {
 
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
+}
+
+model alertlogs {
+id String @id @default(auto()) @map("_id") @db.ObjectId
+incidentType String
+incidentTime DateTime
+lat Float
+lng Float
+
+organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+organizationId String?       @db.ObjectId
 }
