@@ -23,6 +23,15 @@ export const stopRouter = router({
         const stops = await db.stop.findMany();
 
         return stops;
+      } else if (user.role === "CREW") {
+        const stops = await db.stop.findMany({
+          where: {
+            organizationId: user.organizationId,
+            routeId: user.routeId,
+          },
+        });
+
+        return stops;
       } else {
         const stops = await db.stop.findMany({
           where: {
