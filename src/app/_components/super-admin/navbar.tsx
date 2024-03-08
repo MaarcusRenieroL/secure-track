@@ -1,7 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
@@ -41,6 +49,10 @@ const SuperAdminNavbar: React.FC = () => {
       href: "/super-admin/passenger-logs",
     },
     {
+      name: "Alert Logs",
+      href: "/super-admin/alert-logs",
+    },
+    {
       name: "Settings",
       href: "/super-admin/settings",
     },
@@ -69,7 +81,11 @@ const SuperAdminNavbar: React.FC = () => {
           </div>
           <SheetFooter className="mt-10">
             <SheetClose asChild>
-              <Button type="submit" className="w-full" onClick={() => signOut()}>
+              <Button
+                type="submit"
+                className="w-full"
+                onClick={() => signOut()}
+              >
                 Logout
               </Button>
             </SheetClose>
