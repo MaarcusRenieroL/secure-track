@@ -111,7 +111,11 @@ export const routeRouter = router({
               startPoint,
               distance,
               duration,
-              userId: driverUser.userId,
+              users: {
+                connect: {
+                  userId: driverUser.userId
+                }
+              },
               organizationId: adminUser?.organizationId,
               fleetId: fleet?.fleetId,
               stops: {
@@ -188,7 +192,7 @@ export const routeRouter = router({
           message: "Fleet updated successfully",
           data: updatedRoute.routeName,
         };
-      } catch (error) {}
+      } catch (error) { }
     }),
   deleteRoute: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     try {

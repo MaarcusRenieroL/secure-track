@@ -26,7 +26,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    // eslint-disable-next-line
     async jwt({ token, user, trigger, session: nextSession }) {
       const session = nextSession as Session;
       const dbUser = await db.user.findFirst({

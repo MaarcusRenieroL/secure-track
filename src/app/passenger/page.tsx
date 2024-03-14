@@ -5,6 +5,7 @@ import MapSection from "../_components/admin/dashboard/map";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { Fleet, Crew } from "@prisma/client";
 
 export default async function PassengerDashboardPage() {
   const session = await getServerSession(authOptions);
@@ -14,21 +15,21 @@ export default async function PassengerDashboardPage() {
       role: "CREW",
     },
   });
-  const crewDetails = await db.crew.findFirst({
+  const crewDetails = (await db.crew.findFirst({
     where: {
       email: crew?.email,
     },
-  });
+  })) as Crew;
   const route = await db.route.findFirst({
     where: {
       routeId: crew?.routeId ?? "",
     },
   });
-  const fleet = await db.fleet.findFirst({
+  const fleet = (await db.fleet.findFirst({
     where: {
       route: route,
     },
-  });
+  })) as Fleet;
   return (
     <div className="flex-1 space-y-4">
       <div className="flex items-center justify-between space-y-2">

@@ -7,9 +7,9 @@ declare module "next-auth/jwt" {
     id: string;
     role: enum;
     isOnboarded: boolean;
-    organizationId: string;
-    routeId: string;
-    stopId: string;
+    organizationId: string | undefined | null;
+    routeId: string | undefined | null;
+    stopId: string | undefined | null;
   }
 }
 
@@ -19,9 +19,9 @@ declare module "next-auth" {
       id: string;
       role: enum;
       isOnboarded: boolean;
-      organizationId: string;
-      routeId: string;
-      stopId: string;
+      organizationId: string | undefined | null;
+      routeId: string | undefined | null;
+      stopId: string | undefined | null;
     };
   }
 }
