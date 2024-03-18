@@ -15,7 +15,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "@next-auth/prisma-adapter": "^1.0.7",
-    "@prisma/client": "5.8.1",
+    "@prisma/client": "5.11.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -46,7 +46,6 @@
     "lucide-react": "^0.312.0",
     "next": "^14",
     "next-auth": "^4.24.5",
-    "prisma": "^5.8.1",
     "react": "^18",
     "react-day-picker": "^8.10.0",
     "react-dom": "^18",
@@ -67,6 +66,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
+    "prisma": "^5.11.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
   }

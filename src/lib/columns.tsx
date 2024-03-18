@@ -6,6 +6,7 @@ import type {
   Route,
   User,
   Stop,
+  Passenger,
   trackinglogs,
   passengerlogs,
   FleetType,
@@ -1629,5 +1630,66 @@ export const alertLogColumns: ColumnDef<alertlogs>[] = [
     ),
     cell: ({ row }) => <div className="min-w-max">{row.getValue("lng")}</div>,
     accessorKey: "lng",
+  },
+];
+
+export const crewPassengerColumns: ColumnDef<Passenger>[] = [
+  {
+    id: "uniqueId",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="ID" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("uniqueId")}</div>
+    ),
+    accessorKey: "id",
+  },
+  {
+    id: "firstName",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="First Name" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("firstName")}</div>
+    ),
+    accessorKey: "firstName",
+  },
+  {
+    id: "year",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Year" />
+      </div>
+    ),
+    cell: ({ row }) => <div className="min-w-max">{row.getValue("year")}</div>,
+    accessorKey: "year",
+  },
+  {
+    id: "department",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Department" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("department")}</div>
+    ),
+    accessorKey: "department",
+  },
+  {
+    id: "phoneNumber",
+    header: ({ column }) => (
+      <div>
+        <DataTableColumnHeader column={column} title="Phone Number" />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="min-w-max">{row.getValue("phoneNumber")}</div>
+    ),
+    accessorKey: "phoneNumber",
   },
 ];

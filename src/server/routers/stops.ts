@@ -48,6 +48,48 @@ export const stopRouter = router({
       });
     }
   }),
+  getPassengersFromStop: privateProcedure.query(async ({ ctx }) => {
+    try {
+      const { userId } = ctx;
+
+      const user = await getUserById(userId);
+
+      if (!user) {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "You are not authorized to make this request",
+        });
+      }
+
+      if (user.role === "CREW") {
+        const users = await db.user.findMany({
+          where: {
+            routeId: user.routeId,
+          },
+          select: {
+            email: true,
+          },
+        });
+
+        const passengers = await db.passenger.findMany({
+          where: {
+            email: {
+              in: users.map((user) => user.email),
+            },
+          },
+        });
+
+        return passengers;
+      }
+
+      return [];
+    } catch (error) {
+      console.log(error);
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    }
+  }),
   addStop: adminProcedure.input(stopSchema).mutation(async ({ ctx, input }) => {
     try {
       const { userId } = ctx;

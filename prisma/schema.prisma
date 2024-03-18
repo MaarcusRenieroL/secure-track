@@ -48,6 +48,8 @@ model Passenger {
   lastName       String?
   email          String @unique
   gender         Gender?
+  year           Int?
+  department     String?
   phoneNumber    String?
   altPhoneNumber String?
   addressLine1   String?
