@@ -30,7 +30,7 @@ model User {
   organization   Organization? @relation(fields: [organizationId], references: [organizationId])
   organizationId String?       @db.ObjectId
 
-  route Route? @relation(fields: [routeId], references: [routeId])
+  route   Route?  @relation(fields: [routeId], references: [routeId])
   routeId String? @db.ObjectId
 
   stop   Stop?   @relation(fields: [stopId], references: [stopId])
@@ -43,10 +43,10 @@ enum Gender {
 }
 
 model Passenger {
-  profileId      String @id @default(auto()) @map("_id") @db.ObjectId
+  profileId      String  @id @default(auto()) @map("_id") @db.ObjectId
   firstName      String?
   lastName       String?
-  email          String @unique
+  email          String  @unique
   gender         Gender?
   year           Int?
   department     String?
@@ -64,10 +64,10 @@ model Passenger {
 }
 
 model Crew {
-  crewId      String @id @default(auto()) @map("_id") @db.ObjectId
+  crewId         String  @id @default(auto()) @map("_id") @db.ObjectId
   firstName      String?
   lastName       String?
-  email          String @unique
+  email          String  @unique
   gender         Gender?
   phoneNumber    String?
   altPhoneNumber String?
@@ -115,7 +115,7 @@ model Organization {
   stops         Stop[]
   trackinglogs  trackinglogs[]
   passengerlogs passengerlogs[]
-  alertlogs alertlogs[]
+  alertlogs     alertlogs[]
 }
 
 enum FleetType {
@@ -224,12 +224,12 @@ model passengerlogs {
 }
 
 model alertlogs {
-id String @id @default(auto()) @map("_id") @db.ObjectId
-incidentType String
-incidentTime DateTime
-lat Float
-lng Float
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  incidentType String
+  incidentTime DateTime
+  lat          Float
+  lng          Float
 
-organization   Organization? @relation(fields: [organizationId], references: [organizationId])
-organizationId String?       @db.ObjectId
+  organization   Organization? @relation(fields: [organizationId], references: [organizationId])
+  organizationId String?       @db.ObjectId
 }
